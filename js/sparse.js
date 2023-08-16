@@ -1,3 +1,4 @@
+// The Soil-Plant-Atmosphere Remote Sensing of Evapotranspitation - SPARSE JavaScript implementation
 
 function runSP() {
 	// INPUT data
