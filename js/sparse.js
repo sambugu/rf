@@ -1,4 +1,5 @@
 // The Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration - SPARSE JavaScript implementation
+// -- ufu --
 
 function runSP() {
 	// INPUT data
@@ -103,7 +104,7 @@ let rcpgd	= rcpg*delta;
 
 // vegetation fraction cover - nadir and at view angle of the tir sensor
 let fcov	= 1 - Math.E**(-sigmoy*lai/Math.cos(0));
-let fcovl 	= fcov;
+let fcovl 	= fcov;									// ???
 var fcov_vz	= 1 - Math.E**(-sigmoy*lai/Math.cos(vza));
 
 // roughness length zoms and displacement height data
