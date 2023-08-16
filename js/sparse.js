@@ -1,4 +1,4 @@
-// The Soil-Plant-Atmosphere Remote Sensing of Evapotranspitation - SPARSE JavaScript implementation
+// The Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration - SPARSE JavaScript implementation
 
 function runSP() {
 	// INPUT data
@@ -35,7 +35,7 @@ function runSP() {
 }
 
 /* SPARSE evapotranspiration algorithm - Boulet et al. (2015) - [https://gitlab.cesbio.omp.eu/bouletg/sparse : matlab scripts]
-Soil-Plant-Atmosphere Remote Sensing of Evapotranspitation
+Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration
 	A surface energy balance method for the estimation and partioning
 	of turbulent fluxes (latent and sensible energy) at the 
 	near-land surface
