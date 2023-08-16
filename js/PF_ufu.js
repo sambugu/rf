@@ -1,5 +1,5 @@
 
-/* Particle filtering algorithm - Gordon and Salmond (1993)
+/* Particle filtering algorithm - Gordon and Salmond (1993) - JS implementation
 -- ufu --
 */
 	
