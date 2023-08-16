@@ -322,13 +322,4 @@ function SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3){
 	return [X1,X2,X3];
 }
 
-/*
-// Standard Normal variate using Box-Muller transform.
-function randn_bm() {
-    var u = 0, v = 0;
-    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
-    while(v === 0) v = Math.random();
-    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
-}
-*/
-//--uÎ“u--
+//--uΓu--

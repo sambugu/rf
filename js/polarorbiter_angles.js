@@ -35,13 +35,4 @@ function polarorbiter_angles(sat_alt,orb_incl,lon_nad,lat_px,lon_px){
 	return [vza_deg,vaa_deg];
 }
 
-/*
-// Standard Normal variate using Box-Muller transform.
-function randn_bm() {
-    var u = 0, v = 0;
-    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
-    while(v === 0) v = Math.random();
-    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
-}
-*/
-//--uÎ“u--
+//--uΓu--
