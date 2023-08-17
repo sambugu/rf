@@ -1,6 +1,6 @@
 
 /* solar angles algorithm - Iqbal (1983) ; Spencer (1971) ; Campbell and Norman (1998)
-	Calculation of solar angles (zenith and azimuth) given a pixel's ground coordinates and the local UTC time 
+	Calculation of solar angles (zenith and azimuth) given a pixel's/point's ground coordinates and the local UTC time 
 	
         .This is free software under the GNU General Public License v3.0.
         .GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
@@ -18,7 +18,7 @@ function solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px){
 	const a10         	= 0.000907;     	const a11 	= -0.002697;	const a12 	= 0.00148;
 	const b0          	= 90.833;
 	
-	let denom 			= 365; 																				// should consider leap years according to the Gregorian calendar for exactness - left AS IS here
+	let denom 			= 365; 																				// should consider leap years according to the Gregorian calendar for exactness (i.e., leapyr IF ((mod(yr/4)==0 EXCEPT mod(yr/100)==0) || mod(yr/400)==0) --- left AS IS here
 	
 	// variables
 	let da          	= 2*Math.PI*(doy - 1 + (Math.floor(time) - 12)/24)/denom; 							// Fractional year / day angle
