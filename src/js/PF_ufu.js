@@ -10,14 +10,14 @@ var T 				= document.getElementById("timesteps").value - 0; //or *1
 var Xinit 			= document.getElementById("init").value*1;
 var sd 				= document.getElementById("pert").value*1; //or - 0
 //var sd = 1; // hardcoded for convenience
-var initXvar 		= 2; // hardcoded for convenience
+var initXvar		= 2; // hardcoded for convenience
 var pdf 			= document.getElementById("pdf").value;
-var X_lklhd 		= new Array(T); //empty array to hold the likelihood/observations
-var X_analysis 		= new Array(T); //empty array to hold the updates/posteriors
+var X_lklhd			= new Array(T); //empty array to hold the likelihood/observations
+var X_analysis		= new Array(T); //empty array to hold the updates/posteriors
 var X_ol 			= new Array(T); //empty array to hold the open-loop estimates - initialized with previous timestep's posterior
-var X_ol_Prior_init = new Array(T); //empty array to hold the open-loop estimates - initialized with previous timestep's prior
+var X_ol_Prior_init	= new Array(T); //empty array to hold the open-loop estimates - initialized with previous timestep's prior
 var Xensemble 		= new Array(Np); //empty array to hold the particles
-var Xaxis 			= new Array(T);
+var Xaxis			= new Array(T);
 
 
 // create initial backgrounds/priors by perturbing Xinit
