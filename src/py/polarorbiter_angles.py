@@ -13,7 +13,7 @@ import math
 
 def polarorbiter_angles(sat_alt,orb_incl,lon_nad,lat_px,lon_px):
     # constants
-    rad_earth 	        = 6371
+    rad_earth 	        = 6371                                                                                          # radius of the earth [Km]
     
     # variables
     orb_incl_rads	= orb_incl*math.pi/180										# orbit inclination in radians
