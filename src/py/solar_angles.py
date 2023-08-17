@@ -11,7 +11,7 @@ solar angles algorithm - Iqbal (1983) ; Spencer (1971) ; Campbell and Norman (19
 import math
 
 def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
-    # constants
+    # constants --- from Fourier series analysis by Spencer (1971) - https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
     A0 			= 229.18
     a1          	= 0.000075;     a2  = 0.001868;     a3 	= -0.032077; 
     a4          	= -0.014615;    a5  = -0.040849;    a6 	= 0.006918;
