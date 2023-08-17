@@ -45,9 +45,9 @@ def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
     saa_rads		= math.acos((math.sin(sol_alt*math.pi/180)*math.sin(lat_px) - math.sin(declin))/(math.cos(sol_alt*math.pi/180)*math.cos(lat_px)))
 
     if ha>0:
-        saa_deg = 180 + saa_rads*180/math.pi
+        saa_deg         = 180 + saa_rads*180/math.pi
     else:
-        saa_deg	= 180 - saa_rads*180/math.pi
+        saa_deg	        = 180 - saa_rads*180/math.pi
 
     ha2                 = math.acos(math.cos(b0*math.pi/180)/(math.cos(lat_px)*math.cos(declin)) - math.tan(lat_px)*math.tan(declin))               # Sunrise/sunset hour angle
 	
