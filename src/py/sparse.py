@@ -247,9 +247,9 @@ def SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3):
     IA3_2	= -(A1_1*A3_2 - A1_2*A3_1)/detA
     IA3_3	=  (A1_1*A2_2 - A1_2*A2_1)/detA
 	# solution
-    X1 	= IA1_1*B1 + IA1_2*B2 + IA1_3*B3                                                                # LEs or LEv
-    X2 	= IA2_1*B1 + IA2_2*B2 + IA2_3*B3                                                                # Ts-Ta
-    X3 	= IA3_1*B1 + IA3_2*B2 + IA3_3*B3                                                                # Tv-Ta
+    X1 	        = IA1_1*B1 + IA1_2*B2 + IA1_3*B3                                                        # LEs or LEv
+    X2 	        = IA2_1*B1 + IA2_2*B2 + IA2_3*B3                                                        # Ts-Ta
+    X3 	        = IA3_1*B1 + IA3_2*B2 + IA3_3*B3                                                        # Tv-Ta
 	
     return [X1,X2,X3];
 
