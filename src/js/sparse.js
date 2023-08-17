@@ -264,11 +264,11 @@ let Hs 		= rcp*gas*(X2-X0); 											// soil sensible heat
 let Hv 		= rcp*gav*(X3-X0); 											// vegetation sensible heat
 let H 		= Hs + Hv; 													// overall sensible heat flux
 let LE		= LEs + LEv;												// overall latent heat energy
-let G 		= xg*rns
+let G 		= xg*rns;
 
 let T0 		= X0 + Ta; 													// aerodynamic temperature in [K]
 let Ts 		= X2 + Ta; 													// soil temperature in [K]
-let Tv 		= X3 + Ta; ; 												// vegetation temperature in [K]
+let Tv 		= X3 + Ta;	 												// vegetation temperature in [K]
 let Tsf 	= ((emissf*ratm - cras - crav - X2*(aras+arav) - X3*(bras+brav))/(sigma*emissf))**0.25; 
 
 //document.getElementById("SEB_output").innerHTML = [Math.floor(LE),Math.floor(H),Math.floor(rn),Math.floor(G),Math.floor(LEv),Math.floor(LEs),Math.floor(Hv),Math.floor(Hs),Math.floor(Tv),Math.floor(Ts),Math.floor(Tsf)];
@@ -278,13 +278,13 @@ return [Math.floor(LE),Math.floor(H),Math.floor(rn),Math.floor(G),Math.floor(LEv
 
 function calcRn(rg,ratm,emiss,emisv,albe,albv,fcov,fcovl,albsmn,albsmx,albmode){
 	// calculate rn forcing terms
-	if (albmode != 'Capped'{
+	if (albmode != 'Capped'){
 		var albs 	= (albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2);
 	} else {
 		var albs 	= Math.max(albsmn,Math.min(albsmn,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)));		
 	}
 	//var albs 	= (albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2);
-	var albs 	= Math.max(albsmn,Math.min(albsmn,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)));
+	//var albs 	= Math.max(albsmn,Math.min(albsmn,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)));
 	v1 			= 1 - albv*albs*fcov; 	v1a = 1 - albv*albs*fcovl;
 	v2 			= 1 - emisv;
 	v3 			= 1 - emiss;
@@ -305,7 +305,7 @@ function calcRn(rg,ratm,emiss,emisv,albe,albv,fcov,fcovl,albsmn,albsmx,albmode){
 function SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3){
 	// SEB matrix solution [A|B] ; [X]=Inv[A][B]
 		//determinant of A
-	detA 	= A1_1*(A2_2*A3_3-A2_3*A3_2) - A1_2*(A2_1*A3_3-A2_3*A3_1) + A1_3*(A2_1*!3_2-A2_2*A3_1);	
+	detA 	= A1_1*(A2_2*A3_3-A2_3*A3_2) - A1_2*(A2_1*A3_3-A2_3*A3_1) + A1_3*(A2_1*A3_2-A2_2*A3_1);	
 		//inverse matrix coefficients
 	IA1_1	=  (A2_2*A3_3 - A2_3*A3_2)/detA;
 	IA1_2	= -(A1_2*A3_3 - A1_3*A3_2)/detA;
@@ -317,7 +317,7 @@ function SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3){
 	IA3_2	= -(A1_1*A3_2 - A1_2*A3_1)/detA;
 	IA3_3	=  (A1_1*A2_2 - A1_2*A2_1)/detA;
 		// solution
-	var X1 	= IA1_1*B1 + IA1_2*B2 + IA1_3*B3; //LEs
+	var X1 	= IA1_1*B1 + IA1_2*B2 + IA1_3*B3; //LEs or LEv
 	var X2 	= IA2_1*B1 + IA2_2*B2 + IA2_3*B3; //Ts-Ta
 	var X3 	= IA3_1*B1 + IA3_2*B2 + IA3_3*B3; //Tv-Ta
 	
