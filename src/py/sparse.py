@@ -209,47 +209,47 @@ def SPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,a
 
 def calcRn(rg,ratm,emiss,emisv,albe,albv,fcov,fcovl,albsmn,albsmx,albmode):
     # calculate rn forcing terms
-    if albmode != 'Capped':
-        albs    = (albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)
+    if albmode      != 'Capped':
+        albs        = (albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)
     else:
-        albs 	= max(albsmn,min(albsmn,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)))		
+        albs 	    = max(albsmn,min(albsmn,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)))		
 
-    # albs 	= (albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)
-    # albs 	= max(albsmn,min(albsmn,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)))
-    v1          = 1 - albv*albs*fcov; 	v1a = 1 - albv*albs*fcovl
-    v2 	        = 1 - emisv
-    v3 	        = 1 - emiss
-    v4 		= 1 - fcov;                     v4a = 1 - fcovl
-    v5 		= 1 - fcov*v2*v3; 		v5a = 1 - fcovl*v2*v3
-    arns 	= -(v4a*emiss + emisv*emiss*fcovl)/v5a
-    brns 	= (emisv*emiss*fcovl)/v5a
-    crns 	= (rg*(1-albs)*v4)/v1 + (v4a*emiss*ratm)/v5a
-    cras 	= (v4a*emiss*ratm)/v5a
-    arnv 	= brns
-    brnv 	= -fcovl*(emisv + (emisv*emiss + v4a*v3*emisv)/v5a)
-    crnv 	= rg*(1-albv)*fcov*(1 + (albs*v4)/v1) + fcovl*emisv*ratm*(1 + (v4a*v3)/v5a)
-    crav 	= fcovl*emisv*ratm*(1 + (v4a*v3)/v5a)
+    # albs 	    = (albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)
+    # albs 	    = max(albsmn,min(albsmn,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)))
+    v1              = 1 - albv*albs*fcov; 	v1a = 1 - albv*albs*fcovl
+    v2 	            = 1 - emisv
+    v3 	            = 1 - emiss
+    v4 		    = 1 - fcov;                     v4a = 1 - fcovl
+    v5 		    = 1 - fcov*v2*v3; 		v5a = 1 - fcovl*v2*v3
+    arns 	    = -(v4a*emiss + emisv*emiss*fcovl)/v5a
+    brns 	    = (emisv*emiss*fcovl)/v5a
+    crns 	    = (rg*(1-albs)*v4)/v1 + (v4a*emiss*ratm)/v5a
+    cras 	    = (v4a*emiss*ratm)/v5a
+    arnv 	    = brns
+    brnv 	    = -fcovl*(emisv + (emisv*emiss + v4a*v3*emisv)/v5a)
+    crnv 	    = rg*(1-albv)*fcov*(1 + (albs*v4)/v1) + fcovl*emisv*ratm*(1 + (v4a*v3)/v5a)
+    crav 	    = fcovl*emisv*ratm*(1 + (v4a*v3)/v5a)
 
     return [albs,arns,brns,crns,arnv,brnv,crnv,cras,crav]
 
 def SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3):
     # SEB matrix solution [A|B] ; [X]=Inv[A][B]
         # determinant of A
-    detA 	= A1_1*(A2_2*A3_3-A2_3*A3_2) - A1_2*(A2_1*A3_3-A2_3*A3_1) + A1_3*(A2_1*A3_2-A2_2*A3_1)
+    detA 	    = A1_1*(A2_2*A3_3-A2_3*A3_2) - A1_2*(A2_1*A3_3-A2_3*A3_1) + A1_3*(A2_1*A3_2-A2_2*A3_1)
         # inverse matrix coefficients
-    IA1_1	=  (A2_2*A3_3 - A2_3*A3_2)/detA
-    IA1_2	= -(A1_2*A3_3 - A1_3*A3_2)/detA
-    IA1_3	=  (A1_2*A2_3 - A1_3*A2_2)/detA
-    IA2_1	= -(A2_1*A3_3 - A2_3*A3_1)/detA
-    IA2_2	=  (A1_1*A3_3 - A1_3*A3_1)/detA
-    IA2_3	= -(A1_1*A2_3 - A1_3*A2_1)/detA
-    IA3_1	=  (A2_1*A3_2 - A2_2*A3_1)/detA
-    IA3_2	= -(A1_1*A3_2 - A1_2*A3_1)/detA
-    IA3_3	=  (A1_1*A2_2 - A1_2*A2_1)/detA
+    IA1_1	    =  (A2_2*A3_3 - A2_3*A3_2)/detA
+    IA1_2	    = -(A1_2*A3_3 - A1_3*A3_2)/detA
+    IA1_3	    =  (A1_2*A2_3 - A1_3*A2_2)/detA
+    IA2_1	    = -(A2_1*A3_3 - A2_3*A3_1)/detA
+    IA2_2	    =  (A1_1*A3_3 - A1_3*A3_1)/detA
+    IA2_3	    = -(A1_1*A2_3 - A1_3*A2_1)/detA
+    IA3_1	    =  (A2_1*A3_2 - A2_2*A3_1)/detA
+    IA3_2	    = -(A1_1*A3_2 - A1_2*A3_1)/detA
+    IA3_3	    =  (A1_1*A2_2 - A1_2*A2_1)/detA
 	# solution
-    X1 	        = IA1_1*B1 + IA1_2*B2 + IA1_3*B3                                                        # LEs or LEv
-    X2 	        = IA2_1*B1 + IA2_2*B2 + IA2_3*B3                                                        # Ts-Ta
-    X3 	        = IA3_1*B1 + IA3_2*B2 + IA3_3*B3                                                        # Tv-Ta
+    X1 	            = IA1_1*B1 + IA1_2*B2 + IA1_3*B3                                                    # LEs or LEv
+    X2 	            = IA2_1*B1 + IA2_2*B2 + IA2_3*B3                                                    # Ts-Ta
+    X3 	            = IA3_1*B1 + IA3_2*B2 + IA3_3*B3                                                    # Tv-Ta
 	
     return [X1,X2,X3]
 
