@@ -1,6 +1,6 @@
 
 /* Particle filtering algorithm - Gordon and Salmond (1993) - JavaScript implementation
--- ufu -- JS from 220220
+-- ufu -- JS
 */
 	
 function runPF(){
