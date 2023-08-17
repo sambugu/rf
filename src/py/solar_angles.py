@@ -13,7 +13,8 @@ import math
 def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
     # constants --- from Fourier series analysis by Spencer (1971) - https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
     A0 			= 229.18
-    a1          	= 0.000075;     a2  = 0.001868;     a3 	= -0.032077; 
+    # a1          	= 0.000075;     a2  = 0.001868;     a3 	= -0.032077;
+    a1          	= 0.0000075;     a2  = 0.001868;     a3 	= -0.032077;                                                                # see correction for var a1 in https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
     a4          	= -0.014615;    a5  = -0.040849;    a6 	= 0.006918;
     a7          	= -0.399912;    a8  = 0.070257;     a9 	= -0.006758;
     a10         	= 0.000907;     a11 = -0.002697;    a12 = 0.00148;
