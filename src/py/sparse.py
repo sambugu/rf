@@ -56,7 +56,7 @@ def SPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,a
     rav		    = xn*math.sqrt(wl/uzf)/(4*alfo*glai*(1 - math.e**(-xn/2)))
     # leaf-air stomatal conductance
     f 		    = (0.0055*max(rg,10)*2)/glai
-    frg 	    = (1 + f)/(f+rstmin/5000)
+    frg 	    = (1 + f)/(f + rstmin/5000)
     fea 	    = 1 + 0.04*da
     # aerodynamic resistance in neutral conditions
     alg 	    = math.log((za - d)/zom)
