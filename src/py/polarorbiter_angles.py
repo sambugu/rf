@@ -36,5 +36,6 @@ def polarorbiter_angles(sat_alt,orb_incl,lon_nad,lat_px,lon_px):
 
 #--uΓu--    
 
+# test
 [vza_deg,vaa_deg] = polarorbiter_angles(761,81.3,4,40,7)
     
