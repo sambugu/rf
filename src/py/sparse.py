@@ -50,7 +50,7 @@ def SPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,a
     zom 	    = max(zoms,0.13*zf)
     # soil-air aerodynamic resistance/conductance
     xkzf	    = 0.4*0.4*ua*(zf - d)/math.log((za - d)/zom)
-    ras		    = zf*(math.e**xn)*((math.e**(-xn*zoms/zf)) - (math.e**((-xn*(d+zom))/zf)))/(xn*xkzf)
+    ras		    = zf*(math.e**xn)*((math.e**(-xn*zoms/zf)) - (math.e**((-xn*(d + zom))/zf)))/(xn*xkzf)
     # leaf-air aerodynamic resistance/conductance
     uzf		    = ua*math.log((zf - d)/zom)/math.log((za - d)/zom)
     rav		    = xn*math.sqrt(wl/uzf)/(4*alfo*glai*(1 - math.e**(-xn/2)))
@@ -131,7 +131,7 @@ def SPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,a
 
 	# output
         X0 	    = (gas*X2 + gav*X3)/g3a
-        d0 	    = (rcpg*ga*da - X1 - rcpgd*gvv*X3)/(rcpg*(gvv+ga))
+        d0 	    = (rcpg*ga*da - X1 - rcpgd*gvv*X3)/(rcpg*(gvv + ga))
         LEs 	    = X1
         LEv	    = rcpg*gvv*(d0 + delta*X3)
 
