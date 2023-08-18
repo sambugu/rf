@@ -35,7 +35,7 @@ function runSP() {
 	SEB_output.textContent = ["LE : "+LE,"H : "+H,"Rn : "+Rn,"G : "+G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf];
 }
 
-/* SPARSE evapotranspiration algorithm - Boulet et al. (2015) - [https://gitlab.cesbio.omp.eu/bouletg/sparse : matlab scripts]
+/* SPARSE evapotranspiration model/algorithm - Boulet et al. (2015) - [https://gitlab.cesbio.omp.eu/bouletg/sparse : matlab scripts]
 Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration
 	A surface energy balance method for the estimation and partioning
 	of turbulent fluxes (latent and sensible energy) at the 
