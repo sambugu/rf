@@ -255,7 +255,7 @@ def SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3):
 
 #--uΓu--
 
-### test
+### test - see https://runningfingers.com/seb.php
 Tsurf           = 297.24
 vza             = 0
 rg              = 630
