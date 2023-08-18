@@ -1,13 +1,13 @@
 '''
 Estimate surface turbulent fluxes using the SPARSE model (Boulet et al., 2015)
-    .requires meteo, radiation, biophysical, and other ancillary data to run
+    .requires meteo, radiation, biophysical, and other ancillary input data to run
 
 -- ufu -- py from 170823
 '''
 
-### test - see https://runningfingers.com/seb.php
-
 import sparse as _fxn_
+
+### test - see https://runningfingers.com/seb.php
 
 Tsurf           = 297.24
 vza             = 0
