@@ -254,27 +254,3 @@ def SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3):
     return [X1,X2,X3]
 
 #--uΓu--
-
-### test - see https://runningfingers.com/seb.php
-Tsurf           = 297.24
-vza             = 0
-rg              = 630
-Ta              = 293.15
-rh              = 50
-ua              = 2
-za              = 3
-lai             = 1.5; glai = 1.5
-zf              = 1
-rstmin          = 100
-albv            = 0.18
-emisv           = 0.98; emiss = 0.96; emissf = 0.97
-albe            = 0.3
-xg              = 0.315
-sigmoy          = 0.5
-albmode         = 'UnCapped'
-
-[LE,H,rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = SPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode)
-
-    
-
-		
