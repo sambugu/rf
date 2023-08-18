@@ -61,6 +61,13 @@ def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
 
 #--uΓu--    
 
-# test
-[sza_deg,saa_deg,sunrise,sunset] = solar_pos(228,13,'Yes',3,0,37.1)
+### test
+doy             = 228
+time            = 13
+tz_bool         = 'Yes'
+tm_zn           = 3
+lat_px          = 0
+lon_px          = 37.1
+
+[sza_deg,saa_deg,sunrise,sunset] = solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px)
     
