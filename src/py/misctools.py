@@ -21,7 +21,7 @@ def leafprj(incl,anglerads):
     '''
     
     # Projection factor/function for : 1) spherical/random/isotropic ; 2) erectophile/vertical ; 3) planophile/horizontal 4) specific foliage/leaf inclination
-    match incl:                                                                 # anglerads(1) = zenith angle of a direction (solar or view); anglerads(2) = leaf inclination angle (from 0 for horizontal to pi/2 for vertical)
+    match incl:                                                                 # anglerads(1)[0] = zenith angle of a direction (solar or view); anglerads(2)[1] = leaf inclination angle (from 0 for horizontal to pi/2 for vertical)
         case 'spherical':                                                       # Nilson (1971), eq. 6c
             G   = 1/2
         case 'vertical':                                                        # ~ eq. 6b
