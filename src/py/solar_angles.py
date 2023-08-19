@@ -14,17 +14,17 @@ def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
     # constants --- from Fourier series analysis by Spencer (1971) - https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
     A0 			= 229.18
     # a1          	= 0.000075;     a2  = 0.001868;     a3 	= -0.032077;
-    a1          	= 0.0000075;    a2  = 0.001868;     a3 	= -0.032077;                                                                        # see correction for var a1 in https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
-    a4          	= -0.014615;    a5  = -0.040849;    a6 	= 0.006918;
-    a7          	= -0.399912;    a8  = 0.070257;     a9 	= -0.006758;
-    a10         	= 0.000907;     a11 = -0.002697;    a12 = 0.00148;
+    a1          	= 0.0000075;    a2  = 0.001868;     a3 	= -0.032077                                                                        # see correction for var a1 in https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
+    a4          	= -0.014615;    a5  = -0.040849;    a6 	= 0.006918
+    a7          	= -0.399912;    a8  = 0.070257;     a9 	= -0.006758
+    a10         	= 0.000907;     a11 = -0.002697;    a12 = 0.00148
     b0          	= 90.833
 
     denom               = 365                                                                                                                       # should consider leap years according to the Gregorian calendar for exactness (i.e., leapyr IF ((mod(yr/4)==0 EXCEPT mod(yr/100)==0) || mod(yr/400)==0) --- left AS IS here
     
 
     # variables
-    da          	= 2*math.pi*(doy - 1 + (math.floor(time) - 12)/24)/denom;                                                                   # Fractional year / day angle
+    da          	= 2*math.pi*(doy - 1 + (math.floor(time) - 12)/24)/denom                                                                    # Fractional year / day angle
 
     if tz_bool=='Yes':
         std_lon 	= tm_zn*15
@@ -35,7 +35,7 @@ def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
     lat_px              = lat_px*math.pi/180
     eq_time 		= A0*(a1 + a2*math.cos(da) + a3*math.sin(da)+a4*math.cos(2*da) + a5*math.sin(2*da))                                         # Equation of time (minutes)
     declin      	= a6 + a7*math.cos(da) + a8*math.sin(da) + a9*math.cos(2*da) + a10*math.sin(2*da) + a11*math.cos(3*da) + a12*math.sin(3*da) # Solar declination - in radians
-    solar_time  	= time + eq_time/60 - lon_corr/60 											    #olar time (hours)
+    solar_time  	= time + eq_time/60 - lon_corr/60 											    # Solar time (hours)
     ha          	= 15*(solar_time-12) 													    # Hour angle (degrees)
 
     # solar zenith angle in radians and degrees
