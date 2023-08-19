@@ -7,7 +7,7 @@
 #     near-land surface
 #
 #     .This is free software under the GNU General Public License v3.0.
-#      Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
+#     .GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
 #
 # -- ufu -- translated to R from 180823
 #======================================================================================================================================
@@ -297,4 +297,4 @@ rn              <- OutputVars$rn;   G               <- OutputVars$G
 LEv             <- OutputVars$LEv;  LEs             <- OutputVars$LEs; Hv               <- OutputVars$Hv;  Hs              <- OutputVars$Hs
 Tv              <- OutputVars$Tv;   Ts              <- OutputVars$Ts;  Tsf              <- OutputVars$Tsf
 
-#--uΓu--
+###
