@@ -10,6 +10,7 @@ General/miscellaneous tools/functions
 import math
 
 
+###===================================================================================================================
 def polarorbiter_angles(sat_alt,orb_incl,lon_nad,lat_px,lon_px):
     '''
     satellite [polar orbiter] view angles algorithm - Niu et al. (2001) - https://doi.org/10.1080/01431160119571
@@ -44,6 +45,7 @@ def polarorbiter_angles(sat_alt,orb_incl,lon_nad,lat_px,lon_px):
 
 #--uΓu--
 
+###===================================================================================================================
 def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
     '''
     solar angles algorithm - Iqbal (1983) ; Spencer (1971) ; Campbell and Norman (1998)
@@ -103,6 +105,7 @@ def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
 
 #--uΓu--
 
+###===================================================================================================================
 def leafprj(incl,anglerads):
     '''
     Leaf Projection Factor - (Nilson, 1971; Ross, 1981; Roujean, 1996,2000)
@@ -131,5 +134,6 @@ def leafprj(incl,anglerads):
                 
     return G
 
-
 #--uΓu--
+
+###===================================================================================================================
