@@ -16,7 +16,7 @@ Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration : https://doi.org/10.
 
 import math
 
-def SPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode):
+def pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode):
 
     # constants
 

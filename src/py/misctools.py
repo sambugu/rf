@@ -14,8 +14,8 @@ def leafprj(incl,anglerads):
     '''
     Leaf Projection Factor - (Nilson, 1971; Ross, 1981; Roujean, 1996,2000)
             Calculation of the projection factor given the [view] zenith angle
-            and the leaf distribution (i.e., leaf	geometry in terms of zenith
-            inclination and azimuth orientation 
+            and the leaf distribution (i.e., leaf geometry in terms of zenith
+            inclination and azimuth orientation (uniform orientation assumed here) 
             
     -- ufu -- py from 190823
     '''
