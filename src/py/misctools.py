@@ -4,7 +4,7 @@ General/miscellaneous tools/functions
         .This is free software under the GNU General Public License v3.0.
         .GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
 	
--- ufu -- py from 190823
+-- ufu -- py from 170823
 '''
 
 import math
