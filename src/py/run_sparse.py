@@ -5,7 +5,7 @@ Estimate surface turbulent fluxes using the SPARSE model (Boulet et al., 2015) :
 -- ufu -- py from 170823
 '''
 
-import pysparse as _fxn_
+import pySPARSE as _fxn_
 
 ### test - see https://runningfingers.com/seb.php
 
