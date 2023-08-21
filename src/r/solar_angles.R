@@ -67,7 +67,7 @@ solar_pos           <- function(doy,time,tz_bool,tm_zn,lat_px,lon_px){
 #--uΓu--     
 
 #======================================================================================================================================
-### test - see https://runningfingers.com/viewangles.php
+### test - see https://runningfingers.com/solar.php
 #
 
 doy 		            <- 228
