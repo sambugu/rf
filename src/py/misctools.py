@@ -3,6 +3,11 @@ General/miscellaneous tools/functions
 
         .This is free software under the GNU General Public License v3.0.
         .GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
+
+        1) polar orbiter [satellite] view angles algorithm - Niu et al. (2001)
+        2) Solar algorithm - Iqbal (1983) ; Spencer (1971)
+        3) Solar radiation at the bottom of atmosphere/top of canopy [BOA/TOC]
+        4) Leaf projection - Nilson (1971), ...
 	
 -- ufu -- py from 170823
 '''
@@ -39,11 +44,11 @@ def polarorbiter_angles(sat_alt,orb_incl,lon_nad,lat_px,lon_px):
     else:
         vaa 	        = math.pi + math.acos(-math.cos(orb_incl_rads)/math.cos(delta)) 				# view azimuth angle (VAA) in radians
 
-    vaa_deg 		= vaa*180/math.pi;										# VAA in degrees
+    vaa_deg 		= vaa*180/math.pi										# VAA in degrees
     
     return [vza_deg,vaa_deg]
+###___________________________________________________________________________________________________________________
 
-#--uΓu--
 
 ###===================================================================================================================
 def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
@@ -77,7 +82,7 @@ def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
 
     lon_corr 		= 4*(std_lon - lon_px)
     lat_px              = lat_px*math.pi/180
-    eq_time 		= A0*(a1 + a2*math.cos(da) + a3*math.sin(da)+a4*math.cos(2*da) + a5*math.sin(2*da))                                         # Equation of time (minutes)
+    eq_time 		= A0*(a1 + a2*math.cos(da) + a3*math.sin(da)+a4*math.cos(2*da) + a5*math.sin(2*da))                                         # Equation of time (radians) - see https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
     declin      	= a6 + a7*math.cos(da) + a8*math.sin(da) + a9*math.cos(2*da) + a10*math.sin(2*da) + a11*math.cos(3*da) + a12*math.sin(3*da) # Solar declination - in radians
     solar_time  	= time + eq_time/60 - lon_corr/60 											    # Solar time (hours)
     ha          	= 15*(solar_time-12) 													    # Hour angle (degrees)
@@ -101,9 +106,40 @@ def solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px):
     sunst      		= 720 - 4*(lon_px+(-ha2*180/math.pi)) - eq_time            							            # Sunset (UTC) in minutes
     sunset      	= std_lon/15 + sunst/60                           									    # Sunset (local time) in hours
 
-    return [sza_deg,saa_deg,sunrise,sunset]
+    return [sza_deg,saa_deg,sunrise,sunset,da]
+###___________________________________________________________________________________________________________________
 
-#--uΓu--
+
+###===================================================================================================================
+def BoaTocRg(tauDat,doy,time,tz_bool,tm_zn,lat_px,lon_px):
+    '''
+    Bottom of Atmosphere, Top of Canopy short-wave solar radiation
+            Calculation of the solar radiation available for driving the energy
+            [thus water] cycle, and partitioning of terrestrial fluxes
+            
+    -- ufu -- py from 200823
+    '''
+
+    # constants
+    Cs                  = 1361                                                                                                                      # solar constant [W.m-2] - incoming solar radiation as projected at the top of atmosphere (TOA)
+        
+    # variables
+    [sza,saa,sunrise,sunset,da] = solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px)
+        
+    E0                  = 1.000110 + 0.034221*math.cos(da) + 0.001280*math.sin(da) + 0.000719*math.cos(2*da) + 0.000077*math.sin(2*da)              # [1/r^2] - see https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
+    
+
+    # Atmosphere's optical depth / transmissivity
+    if tauDat[0] == 'constant':                                                                                                                     # user-defined transmissivity of the atmosphere
+        tau_atm         = tauDat[1]
+    elif tauDat[0] == 'Allen98':                                                                                                                    # atmosphere's transmissivity according to Allen et al. (1998) - FAO56
+        tau_atm         = 0.75 + 2e-5*tauDat[1]                                                                                                     # tau[1] == Z [m] : the elevation [m]
+        
+    RgTOC               = Cs*math.cos(sza*math.pi/180)*E0*tau_atm
+
+    return RgTOC
+###___________________________________________________________________________________________________________________
+
 
 ###===================================================================================================================
 def leafprj(incl,anglerads):
@@ -119,21 +155,26 @@ def leafprj(incl,anglerads):
     # Projection factor/function for : 1) spherical/random/isotropic ; 2) erectophile/vertical ; 3) planophile/horizontal 4) specific foliage/leaf inclination
     match incl:                                                                 # anglerads(1)[0] = zenith angle of a direction (solar or view); anglerads(2)[1] = leaf inclination angle (from 0 for horizontal to pi/2 for vertical)
         case 'spherical':                                                       # Nilson (1971), eq. 6c
-            G   = 1/2
+            G           = 1/2
         case 'vertical':                                                        # ~ eq. 6b
-            G   = 2/math.pi*math.sin(abs(anglerads[0]))
+            G           = 2/math.pi*math.sin(abs(anglerads[0]))
         case 'horizontal':                                                      # ~ eq. 6a
-            G   = abs(math.cos(anglerads[0]))
+            G           = abs(math.cos(anglerads[0]))
         case 'specific':                                                        # ~ eqs. 6d,e,f                                                        
             if (abs(anglerads[0]) + anglerads[1]) <= math.pi/2:
-                G = math.cos(abs(anglerads[0]))*math.cos(anglerads[1])
+                G       = math.cos(abs(anglerads[0]))*math.cos(anglerads[1])
             else:
-                G = 2/math.pi*(math.cos(abs(anglerads[0]))*math.cos(anglerads[1])
-                          *math.asin(1/(math.tan(abs(anglerads[0])))*1/(math.tan(anglerads[1])))
-                          + math.sqrt(1 - math.cos(abs(anglerads[0]))**2 - math.cos(anglerads[1])**2))
+                G       = 2/math.pi*(math.cos(abs(anglerads[0]))*math.cos(anglerads[1])
+                              *math.asin(1/(math.tan(abs(anglerads[0])))*1/(math.tan(anglerads[1])))
+                              + math.sqrt(1 - math.cos(abs(anglerads[0]))**2 - math.cos(anglerads[1])**2))
                 
     return G
+###___________________________________________________________________________________________________________________
 
-#--uΓu--
 
 ###===================================================================================================================
+
+###___________________________________________________________________________________________________________________
+
+
+#--uΓu--

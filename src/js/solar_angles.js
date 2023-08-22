@@ -32,7 +32,7 @@ function solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px){
 	
 	let lon_corr 		= 4*(std_lon - lon_px);
 	lat_px				= lat_px*Math.PI/180;
-	let eq_time 		= A0*(a1 + a2*Math.cos(da) + a3*Math.sin(da)+a4*Math.cos(2*da) + a5*Math.sin(2*da));// Equation of time (minutes)
+	let eq_time 		= A0*(a1 + a2*Math.cos(da) + a3*Math.sin(da)+a4*Math.cos(2*da) + a5*Math.sin(2*da));// Equation of time (radians) - see https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
 	let declin      	= a6 + a7*Math.cos(da) + a8*Math.sin(da) + a9*Math.cos(2*da) + a10*Math.sin(2*da) + a11*Math.cos(3*da) + a12*Math.sin(3*da); // Solar declination - in radians
 	let solar_time  	= time + eq_time/60 - lon_corr/60; 													// Solar time (hours)
 	let ha          	= 15*(solar_time-12); 																// Hour angle (degrees)

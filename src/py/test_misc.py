@@ -4,7 +4,7 @@ Test the various algorithms in misctools.py
 -- ufu -- py from 170823
 '''
 
-from misctools import polarorbiter_angles, solar_pos, leafprj
+from misctools import polarorbiter_angles, solar_pos, BoaTocRg, leafprj
 
 ### test - polar orbiter view angles
 sat_alt             = 761
@@ -25,7 +25,21 @@ tm_zn           = 3
 lat_px          = 0
 lon_px          = 37.1
 
-[sza_deg,saa_deg,sunrise,sunset] = solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px)
+[sza_deg,saa_deg,sunrise,sunset,da] = solar_pos(doy,time,tz_bool,tm_zn,lat_px,lon_px)
+
+
+
+### test - top of canopy/bottom of atmosphere incoming S-W radiance
+doy             = 228
+time            = 13
+tz_bool         = 'Yes'
+tm_zn           = 3
+lat_px          = 0
+lon_px          = 37.1
+
+tauDat          = ['constant',0.76]
+
+Rg              = BoaTocRg(tauDat,doy,time,tz_bool,tm_zn,lat_px,lon_px)
 
 
 

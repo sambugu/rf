@@ -35,7 +35,7 @@ solar_pos           <- function(doy,time,tz_bool,tm_zn,lat_px,lon_px){
   
   lon_corr 		      <- 4*(std_lon - lon_px)
   lat_px 		        <- lat_px*pi/180
-  eq_time 		      <- A0*(a1 + a2*cos(da) + a3*sin(da)+a4*cos(2*da) + a5*sin(2*da))                                          # Equation of time (minutes)
+  eq_time 		      <- A0*(a1 + a2*cos(da) + a3*sin(da)+a4*cos(2*da) + a5*sin(2*da))                                          # Equation of time (radians) - see https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html
   declin 		        <- a6 + a7*cos(da) + a8*sin(da) + a9*cos(2*da) + a10*sin(2*da) + a11*cos(3*da) + a12*sin(3*da)            # Solar declination - in radians
   solar_time 		    <- time + eq_time/60 - lon_corr/60 											                                                  # Solar time (hours)
   ha 		            <- 15*(solar_time-12) 													                                                          # Hour angle (degrees)
