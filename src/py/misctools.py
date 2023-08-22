@@ -1,10 +1,10 @@
 '''
 General/miscellaneous tools/functions :
 
-            1) polar orbiter [satellite] view angles algorithm - Niu et al. (2001)
-            2) Solar algorithm - Iqbal (1983) ; Spencer (1971)
-            3) Solar radiation at the bottom of atmosphere/top of canopy [BOA/TOC]
-            4) Leaf projection - Nilson (1971), ...
+            - Polar orbiter [satellite] view angles algorithm - Niu et al. (2001)
+            - Solar algorithm - Iqbal (1983) ; Spencer (1971)
+            - Solar radiation at the bottom of atmosphere/top of canopy [BOA/TOC]
+            - Leaf projection - Nilson (1971), ...
             
         .This is free software under the GNU General Public License v3.0.
         .GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
