@@ -4,7 +4,7 @@ Test the various algorithms in misctools.py
 -- ufu -- py from 170823
 '''
 
-from misctools import polarorbiter_angles, solar_pos, BoaTocRg, leafprj
+from misctools import polarorbiter_angles, solar_pos, BoaTocRg, leafprj, brightnessT_814N105125
 
 ### test - polar orbiter view angles
 sat_alt             = 761
@@ -44,7 +44,19 @@ Rg              = BoaTocRg(tauDat,doy,time,tz_bool,tm_zn,lat_px,lon_px)
 
 
 ### test - leaf projection function
-anglerads       = [1,1]
-G               = leafprj('specific',anglerads)
+anglerads       = [1,1]                         # zenith angle [view/sun], and leaf inclination [zenith] in radians
+incl            = 'specific'                    # 'spherical' . 'vertical' . 'horizontal' . 'specific'
+G               = leafprj(incl,anglerads)
+
+
+
+### test - sky irradiance scaling to spectral sensing range of TIR sensor 
+dat             = {'TIRband':'TIR814'}          # 'TIR814' or 'TIR105125'
+dat['rh']       = 50
+dat['airT']     = 295                           # [K]
+dat['tsobs']    = 305 - 273.15                  # [C]
+TBdat           = brightnessT_814N105125(dat)
+
+
 
 #--uΓu--

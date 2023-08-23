@@ -5,11 +5,12 @@ General/miscellaneous tools/functions :
             - Solar algorithm - Iqbal (1983) ; Spencer (1971)
             - Solar radiation at the bottom of atmosphere/top of canopy [BOA/TOC]
             - Leaf projection - Nilson (1971), ...
+            - Spectral scaling of incident sky emission/radiance to within sensing range of TIR sensor  - Olioso (1995); Idso (1981)
             
         .This is free software under the GNU General Public License v3.0.
         .GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
 	
--- ufu -- py from 170823
+-- ufu --
 '''
 
 import math
@@ -153,14 +154,14 @@ def leafprj(incl,anglerads):
     '''
     
     # Projection factor/function for : 1) spherical/random/isotropic ; 2) erectophile/vertical ; 3) planophile/horizontal 4) specific foliage/leaf inclination
-    match incl:                                                                 # anglerads(1)[0] = zenith angle of a direction (solar or view); anglerads(2)[1] = leaf inclination angle (from 0 for horizontal to pi/2 for vertical)
-        case 'spherical':                                                       # Nilson (1971), eq. 6c
+    match incl:                                                                                                         # anglerads(1)[0] = zenith angle of a direction (solar or view); anglerads(2)[1] = leaf inclination angle (from 0 for horizontal to pi/2 for vertical)
+        case 'spherical':                                                                                               # Nilson (1971), eq. 6c
             G           = 1/2
-        case 'vertical':                                                        # ~ eq. 6b
+        case 'vertical':                                                                                                # ~ eq. 6b
             G           = 2/math.pi*math.sin(abs(anglerads[0]))
-        case 'horizontal':                                                      # ~ eq. 6a
+        case 'horizontal':                                                                                              # ~ eq. 6a
             G           = abs(math.cos(anglerads[0]))
-        case 'specific':                                                        # ~ eqs. 6d,e,f                                                        
+        case 'specific':                                                                                                # ~ eqs. 6d,e,f                                                        
             if (abs(anglerads[0]) + anglerads[1]) <= math.pi/2:
                 G       = math.cos(abs(anglerads[0]))*math.cos(anglerads[1])
             else:
@@ -169,6 +170,43 @@ def leafprj(incl,anglerads):
                               + math.sqrt(1 - math.cos(abs(anglerads[0]))**2 - math.cos(anglerads[1])**2))
                 
     return G
+###___________________________________________________________________________________________________________________
+
+
+###===================================================================================================================
+def brightnessT_814N105125(dat):
+    '''
+    Ratm spectral scaling algorithm - Olioso (1995); Idso (1981)
+            Scaling of the incoming sky radiance (atmospheric emission) to within 8-14 um
+            and 10.5-12.5 um spectral bands [sensing range of most TIR sensors]
+            
+    -- ufu -- py from 220823
+    '''
+
+    # constants/variables
+    sigma                = 5.67e-8
+    tsobs                = dat['tsobs']                                                                                 # [C]
+    ta                   = dat['airT']                                                                                  # [K]
+    rh                   = dat['rh']
+    ea                   = 0.01*rh*6.108*math.exp(17.27*(ta - 273.15)/(ta - 35.85))                                     # ta in K, rh %
+    
+    match dat['TIRband']:
+        case 'TIR814':                                                                                                  # 8-14 um
+            f814         = -0.6732 + 0.624*0.01*(tsobs + 273.15) - 0.914*10**(-5)*(tsobs + 273.15)**2                   # tsobs in C
+            emis814      = 0.15 + 5.03*10**(-6)*ea*math.e**(2450/ta)
+            f814ta       = -0.6732 + 0.624*0.01*ta - 0.914*10**(-5)*ta**2
+            ratm814      = emis814*sigma*f814ta*ta**4
+            TBdat        = {'f':f814}; TBdat['fta'] = f814ta
+            TBdat['ratm']= ratm814
+        case 'TIR105125':                                                                                               # 10.5-12.5 um
+            f105125      = -0.2338 + 0.2288*0.01*(tsobs + 273.15) - 0.3617*10**(-5)*(tsobs + 273.15)**2
+            emis105125   = 5.91*10**(-6)*ea*math.exp(2450/ta)
+            f105125ta    = -0.2338 + 0.2288*0.01*ta - 0.3617*10**(-5)*ta**2
+            ratm105125   = emis105125*sigma*f105125ta*ta**4
+            TBdat        = {'f':f105125}; TBdat['fta'] = f105125ta
+            TBdat['ratm']= ratm105125
+            
+    return TBdat
 ###___________________________________________________________________________________________________________________
 
 
