@@ -55,7 +55,7 @@ dat             = {'TIRband':'TIR814'}          # 'TIR814' or 'TIR105125'
 dat['rh']       = 50
 dat['airT']     = 295                           # [K]
 dat['tsobs']    = 305 - 273.15                  # [C]
-TBdat           = brightnessT_814N105125(dat)
+TBdat           = brightnessT_814N105125(dat)   # finally, sigma.TB^4 ≈ emisf.sigma.Tsf^4 + (1-emisf).TBdat['ratm']/TBdat['f']
 
 
 

@@ -193,16 +193,16 @@ def brightnessT_814N105125(dat):
     match dat['TIRband']:
         case 'TIR814':                                                                                                  # 8-14 um
             f814         = -0.6732 + 0.624*0.01*(tsobs + 273.15) - 0.914*10**(-5)*(tsobs + 273.15)**2                   # tsobs in C
-            emis814      = 0.15 + 5.03*10**(-6)*ea*math.e**(2450/ta)
+            emis814      = 0.15 + 5.03*10**(-6)*ea*math.e**(2450/ta)                                                    # atmospheric apparent emissivity @8um-14um
             f814ta       = -0.6732 + 0.624*0.01*ta - 0.914*10**(-5)*ta**2
-            ratm814      = emis814*sigma*f814ta*ta**4
+            ratm814      = emis814*sigma*f814ta*ta**4                                                                   # atmospheric emission @8um-14um
             TBdat        = {'f':f814}; TBdat['fta'] = f814ta
             TBdat['ratm']= ratm814
         case 'TIR105125':                                                                                               # 10.5-12.5 um
             f105125      = -0.2338 + 0.2288*0.01*(tsobs + 273.15) - 0.3617*10**(-5)*(tsobs + 273.15)**2
-            emis105125   = 5.91*10**(-6)*ea*math.exp(2450/ta)
+            emis105125   = 5.91*10**(-6)*ea*math.exp(2450/ta)                                                           # atmospheric apparent emissivity @10.5um-12.5um
             f105125ta    = -0.2338 + 0.2288*0.01*ta - 0.3617*10**(-5)*ta**2
-            ratm105125   = emis105125*sigma*f105125ta*ta**4
+            ratm105125   = emis105125*sigma*f105125ta*ta**4                                                             # atmospheric emission @10.5um-12.5um
             TBdat        = {'f':f105125}; TBdat['fta'] = f105125ta
             TBdat['ratm']= ratm105125
             
