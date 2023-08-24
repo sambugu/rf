@@ -6,6 +6,7 @@ General/miscellaneous tools/functions :
             - Solar radiation at the bottom of atmosphere/top of canopy [BOA/TOC]
             - Leaf projection - Nilson (1971), ...
             - Spectral scaling of incident sky emission/radiance to within sensing range of TIR sensor  - Olioso (1995); Idso (1981)
+            - Chaos Theory : Lorenz' Butterfly model - Lorenz (1963)
             
         .This is free software under the GNU General Public License v3.0.
         .GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
@@ -207,6 +208,60 @@ def brightnessT_814N105125(dat):
             TBdat['ratm']= ratm105125
             
     return TBdat
+###___________________________________________________________________________________________________________________
+
+
+###===================================================================================================================
+import numpy as np
+
+def lorenz(Xin,sigma,rho,beta,dt):
+    '''
+    Chaos Theory : Lorenz Butterfly algorithm - Lorenz (1963) : https://doi.org/10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2
+    The deterministic non-periodic flow algorithm as presented in Lorenz (1963)
+            one-step integration of the numerical solution of a simple system
+            representing cellular convection :
+                Inputs : initial state ; parameters - rho, sigma, beta ; timestep
+            
+            . translated from matlab code by Lisa.Neef.13 : https://github.com/LisaNeef/Data-Assimilation-Practicals-Matlab/blob/master/lorenz63.m
+    -- ufu -- from 240823
+    '''
+
+    # Integration of Xinit using the numerical solution of the Lorenz model
+        # Mean trajectory calculation
+    w1                  = 1/6; w2 = 1/3; w3 = 1/3; w4 = 1/6
+
+    xin1                = Xin
+    fp                  = lorenzRHS(xin1,sigma,rho,beta)
+    x1                  = dt*fp
+
+    xin2                = Xin + 0.5*x1
+    fp                  = lorenzRHS(xin2,sigma,rho,beta)
+    x2                  = dt*fp
+
+    xin3                = Xin + 0.5*x2
+    fp                  = lorenzRHS(xin3,sigma,rho,beta)
+    x3                  = dt*fp
+
+    # x4 = Xin + x3                                                                                                     ### corrected from xx4 = xin+ x3; in lisaneef's .m script -- commented out : throws overflow errors ...nans in both .py and .m
+
+    # ADDED : correction for var x4 --- overflow errors disparu
+    xin4                = Xin + 0.5*x3
+    fp                  = lorenzRHS(xin4,sigma,rho,beta)
+    x4                  = dt*fp
+    
+    X                   = Xin + w1*x1 + w2*x2 + w3*x3 + w4*x4
+
+    return X
+
+def lorenzRHS(xx,sigma,rho,beta):
+    
+        x               = xx[0]; y = xx[1]; z = xx[2]
+        
+        f               = np.zeros(shape = [3,1])
+
+        f[0]            = sigma*(y - x); f[1] = rho*x - y - x*z; f[2] = x*y - beta*z                                    # RHS of eq. (5) of Lorenz (1986) p1550
+
+        return f
 ###___________________________________________________________________________________________________________________
 
 
