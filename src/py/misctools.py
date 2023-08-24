@@ -222,8 +222,8 @@ def lorenz(Xin,sigma,rho,beta,dt):
             representing cellular convection :
                 Inputs : initial state ; parameters - rho, sigma, beta ; timestep
             
-            . translated from matlab code by Lisa.Neef.13 : https://github.com/LisaNeef/Data-Assimilation-Practicals-Matlab/blob/master/lorenz63.m
-    -- ufu -- from 240823
+            . translated from Lisa.Neef.13 matlab scripts  : https://github.com/LisaNeef/Data-Assimilation-Practicals-Matlab/blob/master/lorenz63.m
+    -- ufu -- py from 240823
     '''
 
     # Integration of Xinit using the numerical solution of the Lorenz model
