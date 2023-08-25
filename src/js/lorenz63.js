@@ -152,7 +152,7 @@ window.bar = new Chart(ctx, {
 
 function lorenzRHS(x,y,z,sigma,rho,beta){
 	
-	// RHS of eq. (5) of Lorenz (1986) p1550
+	// RHS of eqs. (25)-(27) of Lorenz (1963) ; also see Lorenz (1986) p1550
 	fpx						= sigma*(y - x);
 	fpy						= rho*x - y - x*z;
 	fpz						= x*y - beta*z;                                
