@@ -259,7 +259,7 @@ def lorenzRHS(xx,sigma,rho,beta):
         
         f               = np.zeros(shape = [3,1])
 
-        f[0]            = sigma*(y - x); f[1] = rho*x - y - x*z; f[2] = x*y - beta*z                                    # RHS of eq. (5) of Lorenz (1986) p1550
+        f[0]            = sigma*(y - x); f[1] = rho*x - y - x*z; f[2] = x*y - beta*z                                    # RHS of eqs. (25)-(27) of Lorenz (1963) ; also see Lorenz (1986) p1550
 
         return f
 ###___________________________________________________________________________________________________________________
