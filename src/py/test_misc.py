@@ -79,18 +79,19 @@ rho             = 28
 beta            = 8/3
 dt              = 0.01
 
-'''
-# initial true state
-xt0 = zeros(3,1);
-xt0(1) =  1.508870;
-xt0(2) = -1.531271;
-xt0(3) = 25.46091;
-'''
+# initial [true] state
+#xt0 = zeros(3,1);
+xt0             = np.zeros(shape = [3,1],dtype = np.float64)
+xt0[0]          = 1.508870;
+xt0[1]          = -1.531271;
+xt0[2]          = 25.46091;
 
+'''
 xt0             = np.zeros(shape = [3,1],dtype = np.float64)
 xt0[0]          = 5*np.random.randn(1)
 xt0[1]          = 5*np.random.randn(1)
 xt0[2]          = 5*np.random.randn(1)
+'''
 
 #x_rand = sig0*np.random.randn(3,1)
 xf0             = xt0 + sig0*np.random.randn(3,1)
