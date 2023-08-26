@@ -120,7 +120,7 @@ window.bar = new Chart(ctx, {
     
     function lorenz(xin,yin,zin,sigma,rho,beta,dt){
 	
-    // Integration of Xinit using the numerical solution of the Lorenz model
+    // Integration of xin using the numerical solution of the Lorenz model
         // Mean trajectory calculation
     const w1				= 1/6; const w2 = 1/3; const w3 = 1/3; const w4 = 1/6;
 

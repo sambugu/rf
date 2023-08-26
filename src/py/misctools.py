@@ -226,7 +226,7 @@ def lorenz(Xin,sigma,rho,beta,dt):
     -- ufu -- py from 240823
     '''
 
-    # Integration of Xinit using the numerical solution of the Lorenz model
+    # Integration of xin using the numerical solution of the Lorenz model
         # Mean trajectory calculation
     w1                  = 1/6; w2 = 1/3; w3 = 1/3; w4 = 1/6
 
