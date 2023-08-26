@@ -32,7 +32,12 @@ function runSP() {
 	[LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = SPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode);
 	//var SEB_output = document.getElementById('output');
 	//SEB_output.innerHTML = [le,h,rn,g,lev,les,hv,hs,tv,ts,tsf];
-	SEB_output.textContent = ["LE : "+LE,"H : "+H,"Rn : "+Rn,"G : "+G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf];
+	//SEB_output.textContent 	= ["LE : "+LE,"H : "+H,"Rn : "+Rn,"G : "+G,Rn-(LE+H+G),LEv,LEs,Hv,Hs,Tv,Ts,Tsf];
+	SEB_le.textContent 		= LE;
+    SEB_h.textContent 		= H;
+    SEB_rn.textContent 		= Rn;
+    SEB_g.textContent 		= G;
+    SEB_output.textContent 	= [Rn-(LE+H+G),LEv,LEs,Hv,Hs,Tv,Ts,Tsf];
 }
 
 /* SPARSE evapotranspiration model/algorithm - Boulet et al. (2015) - [https://gitlab.cesbio.omp.eu/bouletg/sparse : matlab scripts]

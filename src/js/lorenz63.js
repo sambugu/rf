@@ -147,7 +147,7 @@ window.bar = new Chart(ctx, {
 	let yout				= yin + w1*y1 + w2*y2 + w3*y3 + w4*y4;
 	let zout				= zin + w1*z1 + w2*z2 + w3*z3 + w4*z4;
 
-    return [xout,yout,zout]
+    return [xout,yout,zout];
 }
 
 function lorenzRHS(x,y,z,sigma,rho,beta){
@@ -157,7 +157,7 @@ function lorenzRHS(x,y,z,sigma,rho,beta){
 	fpy						= rho*x - y - x*z;
 	fpz						= x*y - beta*z;                                
 
-	return [fpx,fpy,fpz]
+	return [fpx,fpy,fpz];
 }
     
 // Standard Normal variate using Box-Muller transform.
