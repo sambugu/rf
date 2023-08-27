@@ -57,35 +57,6 @@ Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration : https://doi.org/10.
 	
 function SPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode){
 
-/*	
-// INPUT data
-// surface temperature
-let Tsurf 	= document.getElementById("surf_Temp").value - 0; 			//or *1
-//var Ts 		= document.getElementById("surf_Temp").value - 0; 		//or *1
-let vza 	= document.getElementById("view_zenith").value - 0;
-// meteorological data
-let rg 		= document.getElementById("solar_rad").value - 0;
-let Ta 		= document.getElementById("air_Temp").value - 0;
-let rh 		= document.getElementById("rel_Hum").value - 0;
-let ua 		= document.getElementById("wind_speed").value - 0;
-let za 		= document.getElementById("meas_height").value - 0;
-// biophysical parameters/variables and other ancillary data
-let lai 	= document.getElementById("lai").value - 0;
-let glai 	= lai; 														// green leaf area index - load correct data accordingly OTHERWISE ==lai
-let zf 		= document.getElementById("veg_height").value - 0;
-let rstmin 	= document.getElementById("min_stomres").value - 0;
-let albv 	= document.getElementById("veg_alb").value - 0;
-let emisv 	= document.getElementById("veg_emis").value - 0;
-let emiss 	= document.getElementById("soil_emis").value - 0;
-let emissf 	= document.getElementById("surf_emis").value - 0;
-
-let albe 	= document.getElementById("surf_albedo").value - 0;
-let xg 		= document.getElementById("max_GRns").value - 0;
-let sigmoy 	= document.getElementById("fol_prjfactor").value - 0;
-
-let albmode = document.getElementById("albmode").value;
-*/
-
 // constants
 const rcp 	= 1170;
 const gamma = 0.66;
