@@ -245,7 +245,7 @@ def lorenz(XYZin,sigma,rho,beta,dt):
     # x4 = Xin + x3                                                                                                     ### corrected from xx4 = xin+ x3; in lisaneef's .m script-- commented out : throws overflow errors ...nans in both .py and .m
 
     # ADDED : correction for var x4 --- overflow errors disparu
-    xyzin4                = XYZin + 0.5*xyz3
+    xyzin4              = XYZin + 0.5*xyz3
     fp                  = lorenzRHS(xyzin4,sigma,rho,beta)
     xyz4                = dt*fp
 
