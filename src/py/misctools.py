@@ -214,7 +214,7 @@ def brightnessT_814N105125(dat):
 ###===================================================================================================================
 import numpy as np
 
-def lorenz(Xin,sigma,rho,beta,dt):
+def lorenz(XYZin,sigma,rho,beta,dt):
     '''
     Chaos Theory : Lorenz Butterfly algorithm - Lorenz (1963) : https://doi.org/10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2
     The deterministic non-periodic flow algorithm as presented in Lorenz (1963)
@@ -226,36 +226,36 @@ def lorenz(Xin,sigma,rho,beta,dt):
     -- ufu -- py from 240823
     '''
 
-    # Integration of xin using the numerical solution of the Lorenz model
+    # Integration of XYZin using the numerical solution of the Lorenz model
         # Mean trajectory calculation
     w1                  = 1/6; w2 = 1/3; w3 = 1/3; w4 = 1/6
 
-    xin1                = Xin
-    fp                  = lorenzRHS(xin1,sigma,rho,beta)
-    x1                  = dt*fp
+    xyzin1              = XYZin
+    fp                  = lorenzRHS(xyzin1,sigma,rho,beta)
+    xyz1                = dt*fp
 
-    xin2                = Xin + 0.5*x1
-    fp                  = lorenzRHS(xin2,sigma,rho,beta)
-    x2                  = dt*fp
+    xyzin2              = XYZin + 0.5*xyz1
+    fp                  = lorenzRHS(xyzin2,sigma,rho,beta)
+    xyz2                = dt*fp
 
-    xin3                = Xin + 0.5*x2
-    fp                  = lorenzRHS(xin3,sigma,rho,beta)
-    x3                  = dt*fp
+    xyzin3              = XYZin + 0.5*xyz2
+    fp                  = lorenzRHS(xyzin3,sigma,rho,beta)
+    xyz3                = dt*fp
 
-    # x4 = Xin + x3                                                                                                     ### corrected from xx4 = xin+ x3; in lisaneef's .m script -- commented out : throws overflow errors ...nans in both .py and .m
+    # x4 = Xin + x3                                                                                                     ### corrected from xx4 = xin+ x3; in lisaneef's .m script-- commented out : throws overflow errors ...nans in both .py and .m
 
     # ADDED : correction for var x4 --- overflow errors disparu
-    xin4                = Xin + 0.5*x3
-    fp                  = lorenzRHS(xin4,sigma,rho,beta)
-    x4                  = dt*fp
-    
-    X                   = Xin + w1*x1 + w2*x2 + w3*x3 + w4*x4
+    xyzin4                = XYZin + 0.5*xyz3
+    fp                  = lorenzRHS(xyzin4,sigma,rho,beta)
+    xyz4                = dt*fp
 
-    return X
+    XYZ                 = XYZin + w1*xyz1 + w2*xyz2 + w3*xyz3 + w4*xyz4
 
-def lorenzRHS(xx,sigma,rho,beta):
+    return XYZ
+
+def lorenzRHS(xyz,sigma,rho,beta):
     
-        x               = xx[0]; y = xx[1]; z = xx[2]
+        x               = xyz[0]; y = xyz[1]; z = xyz[2]
         
         f               = np.zeros(shape = [3,1])
 
