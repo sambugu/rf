@@ -5,7 +5,7 @@ Estimate surface turbulent fluxes using the SPARSE model (Boulet et al., 2015) :
 -- ufu -- py from 170823
 '''
 
-import pySPARSE as _fxn_
+import pySPARSE as pySP
 
 ### test - see https://runningfingers.com/seb.php
 
@@ -26,6 +26,6 @@ xg              = 0.315
 sigmoy          = 0.5
 albmode         = 'UnCapped'
 
-[LE,H,rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = _fxn_.pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode)
+[LE,H,rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode)
 
 #--uΓu--

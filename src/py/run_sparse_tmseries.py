@@ -5,7 +5,7 @@ Estimate surface turbulent fluxes using the SPARSE model (Boulet et al., 2015) :
 -- ufu -- py from 170823
 '''
 
-import pySPARSE as _fxn_
+import pySPARSE as pySP
 import numpy as np
 import matplotlib.pyplot as plt 
 
@@ -38,7 +38,8 @@ albmode         = 'UnCapped'
 '''
 
 import pandas as pd
-meteoNrad = pd.read_csv('sparse_data/meteoBS_hdr.csv')                      # meteoNrad.head()
+meteoNrad       = pd.read_csv('sparse_data/meteoBS_hdr.csv')                # meteoNrad.head()
+#biophysical     = pd.read_csv('sparse_data/meteoBS_hdr.csv')
 
 
 Tsurf           = np.array(meteoNrad['tsobs']) + 273.15                     # tsobs loaded in [C]
@@ -48,7 +49,7 @@ Ta              = np.array(meteoNrad['ta']) + 273.15                        # ta
 rh              = np.array(meteoNrad['rh'])
 ua              = np.array(meteoNrad['ua'])
 za              = 2.32
-lai             = 1.5; glai = 1.5                                           # np.array(biophysical['zf'])
+lai             = 1.5; glai = 1.5                                           # np.array(biophysical['lai'])
 zf              = 1                                                         # np.array(biophysical['zf'])
 rstmin          = 100
 albv            = 0.18
@@ -63,7 +64,7 @@ xx              = {'le':[]}; xx['h'] = []; xx['rn'] = []; xx['g'] = []; xx['lev'
 #le              = []; h = []; rn =[]; g = []; lev = []; les = []; hv = []; hs = []; tv = []; ts = []; tsf = []
 
 for i in range(len(Tsurf)):
-    [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = _fxn_.pySPARSE(Tsurf[i],vza,rg[i],Ta[i],rh[i],ua[i],za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
+    [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza,rg[i],Ta[i],rh[i],ua[i],za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
 
     '''
     le[len(le):] = [LE]; h[len(h):] = [H]; rn[len(rn):] =[Rn]; g[len(g):] = [G];
