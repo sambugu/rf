@@ -42,7 +42,7 @@ function runSP() {
 
 /* SPARSE evapotranspiration model/algorithm - Boulet et al. (2015) - [https://gitlab.cesbio.omp.eu/bouletg/sparse : matlab scripts]
 Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration : https://doi.org/10.5194/hess-19-4653-2015
-	A surface energy balance method for the estimation and partioning
+	A surface energy balance method for the estimation and partitioning
 	of turbulent fluxes (latent and sensible energy) at the 
 	near-land surface
 	
