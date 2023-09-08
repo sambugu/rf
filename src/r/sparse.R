@@ -5,11 +5,12 @@
 #     A surface energy balance method for the estimation and partitioning
 #     of turbulent fluxes (latent and sensible energy) at the 
 #     near-land surface
+#		[tested - RStudio v2023.06.2]
 #
-#     .This is free software under the GNU General Public License v3.0.
-#     .GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
+#     	.This is free software under the GNU General Public License v3.0.
+#     	.GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
 #
-# -- ufu -- translated to R from 180823 [tested - RStudio v2023.06.2]
+# -- ufu -- translated to R from 180823
 #======================================================================================================================================
 
 # function [tsurf,tvs,tvh,tgs,tgh,t0,rns,rnv,g,hs,hv,h,les,lev,le,betavs,rtmdat] = 

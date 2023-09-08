@@ -4,11 +4,12 @@ Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration : https://doi.org/10.
 	A surface energy balance method for the estimation and partitioning
 	of turbulent fluxes (latent and sensible energy) at the 
 	near-land surface
+        [tested on Python v3.11.2]
 	
         .This is free software under the GNU General Public License v3.0.
         .GNU Licence : https://www.gnu.org/licenses/gpl-3.0-standalone.html
 	
--- ufu -- translated to py from 170823 [tested - PYthon v3.11.2]
+-- ufu -- translated to py from 170823
 '''
 
 # function [tsurf,tvs,tvh,tgs,tgh,t0,rns,rnv,g,hs,hv,h,les,lev,le,betavs,rtmdat] = 
