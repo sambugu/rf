@@ -18,7 +18,7 @@ else:
 name_size                               = 32
 def name(name):
         dots                            = name_size-len(name)-2
-        return sg.Text(name + ' ' + '•'*dots, size=(name_size,1), justification='r',pad=(0,0), font='courier 10')
+        return sg.Text(name + ' ' + '•'*dots, size=(name_size,1),justification='r',pad=(0,0),font='courier 10')
     
 def runSP(values):
     Tsurf                               = float(values['Tsurf'])
@@ -60,13 +60,13 @@ layout_l = [
           [sg.T('Model Inputs',font='_ 14',justification='c',expand_x=True)],
           [name('Surface temperature [K]') , sg.InputText(size=10,s=15,expand_x=True,key='Tsurf',default_text='297.24',justification='c')],
           [name('View Zenith Angle [VZA [°]]') , sg.InputText(size=10,expand_x=True,key='vza',default_text='0',readonly=True,justification='c')],
-          [name('Solar radiation [W/m2]') , sg.InputText(size=10,expand_x=True,key='rg',default_text='630',justification='c')],
+          [name('Solar radiation [W/m²]') , sg.InputText(size=10,expand_x=True,key='rg',default_text='630',justification='c')],
           [name('Air temperature [Ta [K]]') , sg.InputText(size=10,expand_x=True,key='Ta',default_text='293.15',justification='c')],
           [name('Relative humidity [RH [%]]') , sg.InputText(size=10,expand_x=True,key='rh',default_text='50',justification='c')],
           [name('Wind speed [ua [m/s]]') , sg.InputText(size=10,expand_x=True,key='ua',default_text='2',justification='c')],
           [name('Measurement height [za [m]]') , sg.InputText(size=10,expand_x=True,key='za',default_text='3',justification='c')],
-          [name('Leaf Area Index [LAI [m2/m2]]') , sg.InputText(size=10,expand_x=True,key='lai',default_text='1.5',justification='c')],
-          [name('Green LAI [GLAI [m2/m2]]') , sg.InputText(size=10,expand_x=True,key='glai',default_text='1.5',justification='c')],
+          [name('Leaf Area Index [LAI [m²/m²]]') , sg.InputText(size=10,expand_x=True,key='lai',default_text='1.5',justification='c')],
+          [name('Green LAI [GLAI [m²/m²]]') , sg.InputText(size=10,expand_x=True,key='glai',default_text='1.5',justification='c')],
           [name('Vegetation height [m]') , sg.InputText(size=10,expand_x=True,key='zf',default_text='1',justification='c')],
           [name('Min. stomatal resistance [s/m]') , sg.InputText(size=10,expand_x=True, key='rstmin',default_text='100',justification='c')],
           [name('Vegetation alb. [-]') , sg.InputText(size=10,expand_x=True,key='albv',default_text='0.18',justification='c')],
@@ -81,8 +81,10 @@ layout_l = [
           #[name('Capped or Uncapped albedos'),sg.Radio('Uncapped', 1, key='albmode'),sg.Radio('Uncapped', 1, key='albmode')],
           [sg.Push() , sg.Button("RUN SPARSE",s=17,button_color=('white','#008040'))] ]
 layout_r = [
-          [sg.T('Surface Energy Balance (SEB) Estimates',font='_ 14',justification='c',expand_x=True)],     
-          [sg.Text(text_color="white",key="Output",justification='c',font='_ 12',expand_x=True)] ]
+          [sg.T('Surface Energy Balance (SEB) Estimates',font='_ 14',justification='c',expand_x=True)],
+          [sg.TabGroup([[sg.Tab('Overall Fluxes [W/m²]',[[sg.T(key="OutputTot",justification='c',font='_ 12',expand_x=True)]]),
+                         sg.Tab('Partitioning [W/m²]', [[sg.T(key="OutputPart",justification='c',font='_ 12',expand_x=True)]])]],font='_ 13')] ]
+          #[sg.Text(text_color="white",key="Output",justification='c',font='_ 12',expand_x=True)] ]
 
           #[sg.Push() , sg.Button("Reset") , sg.Button("run SPARSE",button_color=('white','#008040'))] ]
 layout = [[Menu([['File', ['Timeseries',['Open CSV [wip]','Save Output [wip]'],'Exit']],['About',['SPARSE SEB', ]]],k='-CUST MENUBAR-',p=0)],              
@@ -98,8 +100,10 @@ while True:                             # Event Loop
         break
     elif event == 'RUN SPARSE':
         [LE,H,rn,G,LEv,LEs,Tv,Ts,Tsf]   = runSP(values)
-        output                          = f"LE: {LE} | H: {H} | Rn: {rn} | G: {G} \n LEv: {LEv} | LEs: {LEs}"# | Tv: {Tv} | Ts: {Ts}"
-        window['Output'].update(output)
+        outputTot                       = f"\n LE: {LE} \n H:  {H} \n Rn: {rn} \n G:  {G}\n" ### output                          = f"LE: {LE} | H: {H} | Rn: {rn} | G: {G} \n LEv: {LEv} | LEs: {LEs}"# | Tv: {Tv} | Ts: {Ts}"
+        outputPart                      = f"\n LEv: {LEv} \n LEs: {LEs}"# | Tv: {Tv} | Ts: {Ts}"
+        window['OutputTot'].update(outputTot)                                         ### window['Output'].update(output)
+        window['OutputPart'].update(outputPart)
     elif event == 'SPARSE SEB':
         sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')
     elif event == 'rf':
