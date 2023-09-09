@@ -59,7 +59,7 @@ layout_l = [
           #[[sg.Text(text, size=10), sg.InputText(size=10, expand_x=True, key=key, default_text=default_text)] for default_text, text in defaults.items() for key, text in keys.items()],
           [sg.T('Model Inputs',font='_ 14',justification='c',expand_x=True)],
           [name('Surface temperature [K]') , sg.InputText(size=10,s=15,expand_x=True,key='Tsurf',default_text='297.24',justification='c')],
-          [name('View Zenith Angle [VZA []') , sg.InputText(size=10,expand_x=True,key='vza',default_text='0',readonly=True,justification='c')],
+          [name('View Zenith Angle [VZA [°]]') , sg.InputText(size=10,expand_x=True,key='vza',default_text='0',readonly=True,justification='c')],
           [name('Solar radiation [W/m2]') , sg.InputText(size=10,expand_x=True,key='rg',default_text='630',justification='c')],
           [name('Air temperature [Ta [K]]') , sg.InputText(size=10,expand_x=True,key='Ta',default_text='293.15',justification='c')],
           [name('Relative humidity [RH [%]]') , sg.InputText(size=10,expand_x=True,key='rh',default_text='50',justification='c')],
@@ -85,7 +85,7 @@ layout_r = [
           [sg.Text(text_color="white",key="Output",justification='c',font='_ 12',expand_x=True)] ]
 
           #[sg.Push() , sg.Button("Reset") , sg.Button("run SPARSE",button_color=('white','#008040'))] ]
-layout = [[Menu([['File', ['Timeseries', ['Open CSV [wip]'], 'Exit']], ['About', ['SPARSE SEB', ]]],  k='-CUST MENUBAR-',p=0)],              
+layout = [[Menu([['File', ['Timeseries',['Open CSV [wip]','Save Output [wip]'],'Exit']],['About',['SPARSE SEB', ]]],k='-CUST MENUBAR-',p=0)],              
               [sg.Col(layout_l, p=0), sg.Col(layout_r, p=0)],
           [sg.Text('www.runningfingers.com', font='_ 8',enable_events=True,expand_x=True,justification='c',key='rf')]]
 
