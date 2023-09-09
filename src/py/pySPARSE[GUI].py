@@ -7,6 +7,7 @@ GUI for running pySPARSE - py Soil Plant Atmosphere Remote Sensing Evapotranspir
 import PySimpleGUI as sg
 import pySPARSE as pySP
 from math import floor
+import webbrowser as browser
 
 use_custom_titlebar                     = True if sg.running_trinket() else False
 if use_custom_titlebar:
@@ -56,10 +57,10 @@ defaults = {
 
 layout_l = [
           #[[sg.Text(text, size=10), sg.InputText(size=10, expand_x=True, key=key, default_text=default_text)] for default_text, text in defaults.items() for key, text in keys.items()],
-          [sg.T('Model Inputs', font='_ 14', justification='c', expand_x=True)],
-          [name('Surface temperature') , sg.InputText(size=10, s=15,expand_x=True,key='Tsurf',default_text='297.24',justification='c')],
+          [sg.T('Model Inputs',font='_ 14',justification='c',expand_x=True)],
+          [name('Surface temperature [K]') , sg.InputText(size=10,s=15,expand_x=True,key='Tsurf',default_text='297.24',justification='c')],
           [name('View Zenith Angle [VZA []') , sg.InputText(size=10,expand_x=True,key='vza',default_text='0',readonly=True,justification='c')],
-          [name('Solar radiation') , sg.InputText(size=10,expand_x=True,key='rg',default_text='630',justification='c')],
+          [name('Solar radiation [W/m2]') , sg.InputText(size=10,expand_x=True,key='rg',default_text='630',justification='c')],
           [name('Air temperature [Ta [K]]') , sg.InputText(size=10,expand_x=True,key='Ta',default_text='293.15',justification='c')],
           [name('Relative humidity [RH [%]]') , sg.InputText(size=10,expand_x=True,key='rh',default_text='50',justification='c')],
           [name('Wind speed [ua [m/s]]') , sg.InputText(size=10,expand_x=True,key='ua',default_text='2',justification='c')],
@@ -78,14 +79,15 @@ layout_l = [
           [name('Capped or Uncapped albedos') , sg.OptionMenu(['Uncapped','Capped'],s=(15,2),key='albmode')],
           #[sg.Text("SEB estimates",size=10) , sg.Text(text_color="white", key="Output")],
           #[name('Capped or Uncapped albedos'),sg.Radio('Uncapped', 1, key='albmode'),sg.Radio('Uncapped', 1, key='albmode')],
-          [sg.Push() , sg.Button("RUN SPARSE",button_color=('white','#008040'))] ]
+          [sg.Push() , sg.Button("RUN SPARSE",s=17,button_color=('white','#008040'))] ]
 layout_r = [
           [sg.T('Surface Energy Balance (SEB) Estimates',font='_ 14',justification='c',expand_x=True)],     
           [sg.Text(text_color="white",key="Output",justification='c',font='_ 12',expand_x=True)] ]
 
           #[sg.Push() , sg.Button("Reset") , sg.Button("run SPARSE",button_color=('white','#008040'))] ]
 layout = [[Menu([['File', ['Timeseries', ['Open CSV [wip]'], 'Exit']], ['About', ['SPARSE SEB', ]]],  k='-CUST MENUBAR-',p=0)],              
-              [sg.Col(layout_l, p=0), sg.Col(layout_r, p=0)]]
+              [sg.Col(layout_l, p=0), sg.Col(layout_r, p=0)],
+          [sg.Text('www.runningfingers.com', font='_ 8',enable_events=True,expand_x=True,justification='c',key='rf')]]
 
 window                                  = sg.Window('pySPARSE : soil plant atmosphere remote sensing evapotranspiration').Layout(layout)
 #window                                  = sg.Window('SPARSE : soil plant atmosphere remote sensing evapotranspiration',layout,use_custom_titlebar=use_custom_titlebar)
@@ -100,6 +102,8 @@ while True:                             # Event Loop
         window['Output'].update(output)
     elif event == 'SPARSE SEB':
         sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')
+    elif event == 'rf':
+        browser.open('https://runningfingers.com/seb.php')
     '''elif event == "Reset":
         for key in keys:
             window[key].update('')'''
