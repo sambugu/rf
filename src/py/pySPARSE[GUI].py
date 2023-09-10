@@ -133,8 +133,8 @@ def _mainwin():
         layout_l = [[sg.Image(filename=resource_path('RB_EBsm.png'))] ]
         layout_r = [[sg.T('pySPARSE',font='_ 14',justification='c',expand_x=True)],
                     [sg.Text('Instantaneous or continuous inputs ?')],
-                    [sg.Button("One Intance", key="inst",expand_x=True),sg.Button("Time Series", key="cont",expand_x=True)] ]        
-        layout   = [[Menu([['File', ['Input Mode',['Key in Model Inputs','Timeseries Input Dataset'],'Exit']],['About',['SPARSE SEB', ]]],k='-CUST MENUBAR-',p=0)],
+                    [sg.Button("One Instance", key="inst",expand_x=True),sg.Button("Time Series", key="cont",expand_x=True)] ]        
+        layout   = [[Menu([['File', ['Input Mode',['Key in Model Inputs','Use Timeseries Dataset'],'Exit']],['About',['SPARSE SEB', ]]],k='-CUST MENUBAR-',p=0)],
                   [sg.Col(layout_l, p=0),sg.VSep(color='#666666'),sg.Col(layout_r, p=0)],
                   [sg.Text('www.runningfingers.com', font='_ 7',enable_events=True,expand_x=True,justification='c',key='rf')]]
         window                                  = sg.Window('pySPARSE : soil plant atmosphere remote sensing evapotranspiration',icon=resource_path('rf.ico')).Layout(layout)
