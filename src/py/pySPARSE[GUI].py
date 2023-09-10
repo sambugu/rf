@@ -18,7 +18,7 @@ else:
 name_size                               = 32
 def name(name):
         dots                            = name_size-len(name)-2
-        return sg.Text(name + ' ' + '•'*dots, size=(name_size,1),justification='r',pad=(0,0),font='courier 10')
+        return sg.Text(name + ' ' + '•'*dots, size=(name_size,1),justification='r',pad=(0,0),font='consolas 10')
     
 def runSP(values):
     Tsurf                               = float(values['Tsurf'])
@@ -91,7 +91,7 @@ layout = [[Menu([['File', ['Timeseries',['Open CSV [wip]','Save Output [wip]'],'
               [sg.Col(layout_l, p=0), sg.Col(layout_r, p=0)],
           [sg.Text('www.runningfingers.com', font='_ 8',enable_events=True,expand_x=True,justification='c',key='rf')]]
 
-window                                  = sg.Window('pySPARSE : soil plant atmosphere remote sensing evapotranspiration').Layout(layout)
+window                                  = sg.Window('pySPARSE : soil plant atmosphere remote sensing evapotranspiration',icon='rf.ico').Layout(layout)
 #window                                  = sg.Window('SPARSE : soil plant atmosphere remote sensing evapotranspiration',layout,use_custom_titlebar=use_custom_titlebar)
 
 while True:                             # Event Loop
