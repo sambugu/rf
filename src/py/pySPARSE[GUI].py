@@ -146,7 +146,7 @@ def _tmseries():
             figure_agg.get_tk_widget().forget()
             plt.close('all')            
             
-        def runSPtm(meteoNrad,progress_bar):
+        def runSPtm(meteoNrad):#,progress_bar):
             
             Tsurf                               = np.array(meteoNrad['tsobs']) + 273.15                         # tsobs loaded in [C]
             vza                                 = 0                                                             # np.array(meteoNrad['vza'])
@@ -181,28 +181,26 @@ def _tmseries():
                 xx['lev'][len(xx['lev']):]      = [LEv]; xx['les'][len(xx['les']):] = [LEs]; xx['hv'][len(xx['hv']):] = [Hv]; xx['hs'][len(xx['hs']):] = [Hs];
                 xx['tv'][len(xx['tv']):]        = [Tv]; xx['ts'][len(xx['ts']):] = [Ts]; xx['tsf'][len(xx['tsf']):] = [Tsf]; xx['doy'][len(xx['doy']):] = [doy[i]]
 
-                if i/100 == floor(i/100) or i == (len(Tsurf)-1):
+                if i/10 == floor(i/10) or i == (len(Tsurf)-1):
                         curr_ = (i/len(Tsurf)*100) if i != (len(Tsurf)-1) else 100                        
-                        progress_bar.UpdateBar(curr_,100)
+                        progress_bar.UpdateBar(curr_,100) 
                         #window.write_event_value('next_sp', curr_)
                         #window.refresh()
+                        if i == (len(Tsurf)-1): run_pySP.update(disabled=False)
                 
             output                              = xx
 
             return [output]
         
         layout_l  = [[sg.Text("Input File: ")], [sg.Input(key='csv_loc',expand_x=True), sg.FileBrowse()],
-                     [],
                      [sg.T(key="inputname",justification='c',font='_ 12',expand_x=True),sg.Button('Load Input Data [.csv]')],
-                     [sg.Canvas(key='rg_canvas', background_color=sg.theme_button_color()[1], size=(305,80),expand_x=True)],
-                     [sg.Canvas(key='rh_canvas', background_color=sg.theme_button_color()[1], size=(305,80),expand_x=True)],
-                     [sg.Canvas(key='ta_canvas', background_color=sg.theme_button_color()[1], size=(305,80),expand_x=True)] ]
-        layout_r  = [[sg.Canvas(key='rnsp_canvas', background_color=sg.theme_button_color()[1], size=(155,150),expand_x=True),
-                      sg.Canvas(key='lesp_canvas', background_color=sg.theme_button_color()[1], size=(155,150),expand_x=True)],
-                     [sg.Canvas(key='le_canvas', background_color=sg.theme_button_color()[1], size=(420,80),expand_x=True)],
-                     [sg.Canvas(key='h_canvas', background_color=sg.theme_button_color()[1], size=(420,80),expand_x=True)],
-                     [sg.Canvas(key='g_canvas', background_color=sg.theme_button_color()[1], size=(420,80),expand_x=True)],
-                     [sg.Canvas(key='rn_canvas', background_color=sg.theme_button_color()[1], size=(420,80),expand_x=True)],
+                     [sg.Canvas(key='indat_canvas', background_color=sg.theme_button_color()[1], size=(305,200),expand_x=True)],
+                     [],
+                     [] ]
+        layout_r  = [[sg.Canvas(key='rnsp_canvas', background_color=sg.theme_button_color()[1], size=(125,120),expand_x=True),
+                      sg.Canvas(key='lesp_canvas', background_color=sg.theme_button_color()[1], size=(125,120),expand_x=True)],
+                     [sg.Canvas(key='outdat_canvas', background_color=sg.theme_button_color()[1], size=(420,200),expand_x=True)],                     
+                     [],
                      [sg.ProgressBar(1, orientation='h', size=(20, 20), key='progress_sp'),
                       sg.Push() , sg.Button("RUN pySPARSE",s=17,button_color=('white','#008040'))],
                      [sg.Text("Output Path: ")], [sg.Input(expand_x=True),sg.FolderBrowse()] ]
@@ -211,7 +209,8 @@ def _tmseries():
                   [sg.Text('www.runningfingers.com',font='_ 6',enable_events=True,expand_x=True,justification='c',key='rf')]]
 
         window                                  = sg.Window('pySPARSE : soil plant atmosphere remote sensing evapotranspiration',icon=resource_path('rf.ico')).Layout(layout)
-        progress_bar                            = window.FindElement('progress_sp')
+        progress_bar                            = window['progress_sp']
+        run_pySP                                = window['RUN pySPARSE']
         
         while True:                             # Event Loop
             event, values                       = window.Read()
@@ -235,20 +234,22 @@ def _tmseries():
                         delete_figure_agg(figure_rg)
                         delete_figure_agg(figure_rh)
                         delete_figure_agg(figure_ta)
-                figrg                           = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100)
-                figrg.add_subplot(111).plot(doy[-2000:-1000],rg[-2000:-1000],'#666666')
-                figrh                           = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100)
-                figrh.add_subplot(111).plot(doy[-2000:-1000],rh[-2000:-1000],'#666666')
-                fig                             = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100)
-                fig.add_subplot(111).plot(doy[-2000:-1000],ta[-2000:-1000],'#666666')
+                figrg                           = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")
+                #figrg.patch.set_alpha(0.0)
+                figrg.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],rg[-2000:-1000],'w')
+                figrh                           = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")
+                figrh.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],rh[-2000:-1000],'w')
+                fig                             = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")
+                fig.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],ta[-2000:-1000],'w')
                 
-                figure_rg                       = draw_figure(window['rg_canvas'].TKCanvas,figrg)
-                figure_rh                       = draw_figure(window['rh_canvas'].TKCanvas,figrh)
-                figure_ta                       = draw_figure(window['ta_canvas'].TKCanvas,fig)          
+                figure_rg                       = draw_figure(window['indat_canvas'].TKCanvas,figrg)
+                figure_rh                       = draw_figure(window['indat_canvas'].TKCanvas,figrh)
+                figure_ta                       = draw_figure(window['indat_canvas'].TKCanvas,fig)          
             elif event == 'RUN pySPARSE':
                 #window['inputname'].update('xxxxx')
                 ### run pySPARSE
-                [seboutput]                     = runSPtm(meteoNrad,progress_bar)
+                run_pySP.update(disabled=True)
+                [seboutput]                     = runSPtm(meteoNrad)#,progress_bar)
                 
                 #outputs
                 if 'figle' in locals():                 #if 'figle' in locals(): del figle, figh, figg, figrn, figrnsp, figlesp
@@ -259,23 +260,23 @@ def _tmseries():
                         delete_figure_agg(figure_lesp)
                         delete_figure_agg(figure_rnsp)
                         
-                figle                           = matplotlib.figure.Figure(figsize=(4,0.75),dpi=100)
-                figle.add_subplot(111).plot(doy[-2000:-1000],seboutput['le'][-2000:-1000],'#666666')
-                figh                            = matplotlib.figure.Figure(figsize=(4,0.75),dpi=100)
-                figh.add_subplot(111).plot(doy[-2000:-1000],seboutput['h'][-2000:-1000],'#666666')
-                figg                            = matplotlib.figure.Figure(figsize=(4,0.75),dpi=100)
-                figg.add_subplot(111).plot(doy[-2000:-1000],seboutput['g'][-2000:-1000],'#666666')
-                figrn                           = matplotlib.figure.Figure(figsize=(4,0.75),dpi=100)
-                figrn.add_subplot(111).plot(doy[-2000:-1000],seboutput['rn'][-2000:-1000],'#666666')
-                figrnsp                         = matplotlib.figure.Figure(figsize=(1.8,1.8),dpi=100)
-                figrnsp.add_subplot(111).plot(np.array(meteoNrad['rnobs'])[-2000:-1000],seboutput['rn'][-2000:-1000],'k.',[-200,800],[-200,800],'k-')
-                figlesp                         = matplotlib.figure.Figure(figsize=(1.8,1.8),dpi=100)
-                figlesp.add_subplot(111).plot(np.array(meteoNrad['leobs'])[-2000:-1000],seboutput['le'][-2000:-1000],'k.',[-200,800],[-200,800],'k-')
+                figle                           = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
+                figle.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['le'][-2000:-1000],'w')
+                figh                            = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
+                figh.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['h'][-2000:-1000],'w')
+                figg                            = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
+                figg.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['g'][-2000:-1000],'w')
+                figrn                           = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
+                figrn.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['rn'][-2000:-1000],'w')
+                figrnsp                         = matplotlib.figure.Figure(figsize=(1.8,1.8),dpi=100, facecolor="#677787")
+                figrnsp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',np.array(meteoNrad['rnobs'])[-2000:-1000],seboutput['rn'][-2000:-1000],'w.')
+                figlesp                         = matplotlib.figure.Figure(figsize=(1.8,1.8),dpi=100, facecolor="#677787")
+                figlesp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',np.array(meteoNrad['leobs'])[-2000:-1000],seboutput['le'][-2000:-1000],'w.')
 
-                figure_le                       = draw_figure(window['le_canvas'].TKCanvas,figle)
-                figure_h                        = draw_figure(window['h_canvas'].TKCanvas,figh)
-                figure_g                        = draw_figure(window['g_canvas'].TKCanvas,figg)
-                figure_rn                       = draw_figure(window['rn_canvas'].TKCanvas,figrn)
+                figure_le                       = draw_figure(window['outdat_canvas'].TKCanvas,figle)
+                figure_h                        = draw_figure(window['outdat_canvas'].TKCanvas,figh)
+                figure_g                        = draw_figure(window['outdat_canvas'].TKCanvas,figg)
+                figure_rn                       = draw_figure(window['outdat_canvas'].TKCanvas,figrn)
                 figure_lesp                     = draw_figure(window['lesp_canvas'].TKCanvas,figlesp)
                 figure_rnsp                     = draw_figure(window['rnsp_canvas'].TKCanvas,figrnsp)
                 '''
