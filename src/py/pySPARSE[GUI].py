@@ -11,10 +11,9 @@ import numpy as np
 import pandas as pd
 import webbrowser as browser
 import matplotlib
-from math import floor
-
-from matplotlib.ticker import NullFormatter  # useful for `logit` scale
 import matplotlib.pyplot as plt
+from math import floor
+from matplotlib.ticker import NullFormatter  # useful for `logit` scale
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 matplotlib.use('TkAgg')
 
@@ -202,7 +201,7 @@ def _tmseries():
                      [sg.Canvas(key='outdat_canvas', background_color=sg.theme_button_color()[1], size=(420,200),expand_x=True)],                     
                      [],
                      [sg.ProgressBar(1, orientation='h', size=(20, 20), key='progress_sp'),
-                      sg.Push() , sg.Button("RUN pySPARSE",s=17,button_color=('white','#008040'))],
+                      sg.Push() , sg.Button("RUN pySPARSE",s=17,button_color=('white','#008040'),disabled=True)],
                      [sg.Text("Output Path: ")], [sg.Input(expand_x=True),sg.FolderBrowse()] ]
         layout    = [[Menu([['File', ['Timeseries',['Open CSV [wip]','Save Output [wip]'],'Key In Data','Exit']],['About',['SPARSE SEB', ]]],k='-CUST MENUBAR-',p=0)],      
                       [sg.Col(layout_l, p=0),sg.VSep(color='#666666'),sg.Col(layout_r, p=0)],
@@ -244,7 +243,9 @@ def _tmseries():
                 
                 figure_rg                       = draw_figure(window['indat_canvas'].TKCanvas,figrg)
                 figure_rh                       = draw_figure(window['indat_canvas'].TKCanvas,figrh)
-                figure_ta                       = draw_figure(window['indat_canvas'].TKCanvas,fig)          
+                figure_ta                       = draw_figure(window['indat_canvas'].TKCanvas,fig)
+
+                run_pySP.update(disabled=False)
             elif event == 'RUN pySPARSE':
                 #window['inputname'].update('xxxxx')
                 ### run pySPARSE
@@ -285,6 +286,8 @@ def _tmseries():
                 progress_bar.UpdateBar(count,100)
                 window.refresh()
                 '''
+            elif event == 'SPARSE SEB':
+                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')    
             elif event == 'rf':
                 browser.open('https://runningfingers.com/seb.php')    
                 
