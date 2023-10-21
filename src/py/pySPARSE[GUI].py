@@ -154,7 +154,8 @@ def _tmseries():
             rh                                  = np.array(meteoNrad['rh'])
             ua                                  = np.array(meteoNrad['ua'])
             za                                  = 2.32
-            lai                                 = 1.5; glai = 1.5                                               # np.array(biophysical['lai'])
+            #lai                                 = 1.5; glai = 1.5  
+            lai                                 = np.array(meteoNrad['lai']); glai = np.array(meteoNrad['glai'])# temporally varying surface leaf areas                                               # np.array(biophysical['lai'])
             zf                                  = 1                                                             # np.array(biophysical['zf'])
             rstmin                              = 100
             albv                                = 0.18
@@ -168,7 +169,7 @@ def _tmseries():
             xx                                  = {'le':[]}; xx['h'] = []; xx['rn'] = []; xx['g'] = []; xx['lev'] = []; xx['les'] = []; xx['hv'] = []; xx['hs'] = []; xx['tv'] = []; xx['ts'] = []; xx['tsf'] = []; xx['doy'] = []
             #le              = []; h = []; rn =[]; g = []; lev = []; les = []; hv = []; hs = []; tv = []; ts = []; tsf = []
             for i in range(len(Tsurf)):
-                [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza,rg[i],Ta[i],rh[i],ua[i],za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
+                [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza,rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
 
                 '''
                 le[len(le):] = [LE]; h[len(h):] = [H]; rn[len(rn):] =[Rn]; g[len(g):] = [G];
