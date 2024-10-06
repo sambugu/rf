@@ -5,6 +5,8 @@ GUI for running pySPARSE - py Soil Plant Atmosphere Remote Sensing Evapotranspir
 '''
 
 import os
+#import ctypes
+import datetime
 import PySimpleGUI as sg
 import pySPARSE as pySP
 import numpy as np
@@ -105,7 +107,7 @@ def _onetm():
                   #[sg.Push() , sg.Button("Reset") , sg.Button("run SPARSE",button_color=('white','#008040'))] ]
         layout   = [[Menu([['File', ['Timeseries',['Open CSV [wip]','Save Output [wip]'],'Exit']],['About',['SPARSE SEB', ]]],k='-CUST MENUBAR-',p=0)],              
                       [sg.Col(layout_l, p=0), sg.Col(layout_r, p=0)],
-                  [sg.Text('www.runningfingers.com',font='_ 8',enable_events=True,expand_x=True,justification='c',key='rf')]]
+                  [sg.Text('Surface Energy Balance | SPARSE',font='_ 8',enable_events=True,expand_x=True,justification='c',key='rf')]]
         
         window                                  = sg.Window('pySPARSE : soil plant atmosphere remote sensing evapotranspiration',icon=resource_path('rf.ico')).Layout(layout)
         #window                                  = sg.Window('SPARSE : soil plant atmosphere remote sensing evapotranspiration',layout,use_custom_titlebar=use_custom_titlebar)
@@ -148,7 +150,7 @@ def _tmseries():
         def runSPtm(meteoNrad):#,progress_bar):
             
             Tsurf                               = np.array(meteoNrad['tsobs']) + 273.15                         # tsobs loaded in [C]
-            vza                                 = 0                                                             # np.array(meteoNrad['vza'])
+            vza                                 = np.array(meteoNrad['vza'])                                    # np.array(meteoNrad['vza'])
             rg                                  = np.array(meteoNrad['rg'])
             Ta                                  = np.array(meteoNrad['ta']) + 273.15                            # ta loaded in [C]
             rh                                  = np.array(meteoNrad['rh'])
@@ -156,12 +158,12 @@ def _tmseries():
             za                                  = 2.32
             #lai                                 = 1.5; glai = 1.5  
             lai                                 = np.array(meteoNrad['lai']); glai = np.array(meteoNrad['glai'])# temporally varying surface leaf areas                                               # np.array(biophysical['lai'])
-            zf                                  = 1                                                             # np.array(biophysical['zf'])
-            rstmin                              = 100
-            albv                                = 0.18
+            zf                                  = np.array(meteoNrad['zf'])                                     # temporally varying vegetation height
+            rstmin                              = np.array(meteoNrad['rstmin'])
+            albv                                = np.array(meteoNrad['albv'])
             emisv                               = 0.98; emiss = 0.96; emissf = 0.97
-            albe                                = 0.3                                                           # np.array(meteoNrad['albe'])
-            xg                                  = 0.315
+            albe                                = np.array(meteoNrad['albedo'])                                 # np.array(meteoNrad['albe'])
+            xg                                  = np.array(meteoNrad['xG'])                                     # G/soil net radiation fraction
             sigmoy                              = 0.5
             albmode                             = 'UnCapped'
             doy                                 = np.array(meteoNrad['doy'])
@@ -169,7 +171,7 @@ def _tmseries():
             xx                                  = {'le':[]}; xx['h'] = []; xx['rn'] = []; xx['g'] = []; xx['lev'] = []; xx['les'] = []; xx['hv'] = []; xx['hs'] = []; xx['tv'] = []; xx['ts'] = []; xx['tsf'] = []; xx['doy'] = []
             #le              = []; h = []; rn =[]; g = []; lev = []; les = []; hv = []; hs = []; tv = []; ts = []; tsf = []
             for i in range(len(Tsurf)):
-                [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza,rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
+                [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin[i],albv[i],emisv,emiss,emissf,albe[i],xg[i],sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
 
                 '''
                 le[len(le):] = [LE]; h[len(h):] = [H]; rn[len(rn):] =[Rn]; g[len(g):] = [G];
@@ -203,14 +205,16 @@ def _tmseries():
                      [],
                      [sg.ProgressBar(1, orientation='h', size=(20, 20), key='progress_sp'),
                       sg.Push() , sg.Button("RUN pySPARSE",s=17,button_color=('white','#008040'),disabled=True)],
-                     [sg.Text("Output Path: ")], [sg.Input(expand_x=True),sg.FolderBrowse()] ]
+                     [sg.Text("Output Path: ")], [sg.Input(key='csv_outloc',expand_x=True),sg.FolderBrowse()],
+                     [sg.Push() , sg.Button("Save Results",s=10,button_color=('white','#008040'),disabled=True)] ]
         layout    = [[Menu([['File', ['Timeseries',['Open CSV [wip]','Save Output [wip]'],'Key In Data','Exit']],['About',['SPARSE SEB', ]]],k='-CUST MENUBAR-',p=0)],      
                       [sg.Col(layout_l, p=0),sg.VSep(color='#666666'),sg.Col(layout_r, p=0)],
-                  [sg.Text('www.runningfingers.com',font='_ 6',enable_events=True,expand_x=True,justification='c',key='rf')]]
+                  [sg.Text('Surface Energy Balance | SPARSE',font='_ 7',enable_events=True,expand_x=True,justification='c',key='rf')]]
 
         window                                  = sg.Window('pySPARSE : soil plant atmosphere remote sensing evapotranspiration',icon=resource_path('rf.ico')).Layout(layout)
         progress_bar                            = window['progress_sp']
         run_pySP                                = window['RUN pySPARSE']
+        Save_SP                                 = window['Save Results']
         
         while True:                             # Event Loop
             event, values                       = window.Read()
@@ -252,6 +256,7 @@ def _tmseries():
                 ### run pySPARSE
                 run_pySP.update(disabled=True)
                 [seboutput]                     = runSPtm(meteoNrad)#,progress_bar)
+                Save_SP.update(disabled=False)
                 
                 #outputs
                 if 'figle' in locals():                 #if 'figle' in locals(): del figle, figh, figg, figrn, figrnsp, figlesp
@@ -287,6 +292,17 @@ def _tmseries():
                 progress_bar.UpdateBar(count,100)
                 window.refresh()
                 '''
+            elif event == 'Save Results':
+                dttime=datetime.datetime.now()
+                #try:
+                file_nm = values['csv_outloc'] + '/SPARSE_SEB_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv'                
+                np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs']
+                                                            ,seboutput['rn'],seboutput['le'],seboutput['lev'],seboutput['les'],seboutput['h'],seboutput['hv'],seboutput['hs'],seboutput['g']]))
+                           ,delimiter=",",header="doy,rnobs,leobs,hobs,gobs,rnest_SPARSE,leest_SPARSE,levest_SPARSE,lesest_SPARSE,hest_SPARSE,hvest_SPARSE,hsest_SPARSE,gest_SPARSE",comments="")
+                #except:
+                #        ctypes.windll.user32.MessageBoxW(0, "Please select a valid saving directory !", "Saving ERROR", 1)
+                        
+        
             elif event == 'SPARSE SEB':
                 sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')    
             elif event == 'rf':
@@ -309,7 +325,7 @@ def _mainwin():
                     [sg.Text(key='locktext', font='_ 8')] ]        
         layout   = [[Menu([['File', ['Input Mode',['Key in Model Inputs','Use Timeseries Dataset'],'Exit']],['About',['SPARSE SEB', ]]],k='-CUST MENUBAR-',p=0)],
                   [sg.Col(layout_l, p=0),sg.VSep(color='#666666'),sg.Col(layout_r, p=0)],
-                  [sg.Text('www.runningfingers.com', font='_ 7',enable_events=True,expand_x=True,justification='c',key='rf')]]
+                  [sg.Text('Surface Energy Balance | SPARSE', font='_ 7',enable_events=True,expand_x=True,justification='c',key='rf')]]
         window                                  = sg.Window('pySPARSE v0.0.1',icon=resource_path('rf.ico')).Layout(layout)
         #window                                  = sg.Window('SPARSE : soil plant atmosphere remote sensing evapotranspiration',layout,use_custom_titlebar=use_custom_titlebar)
 
