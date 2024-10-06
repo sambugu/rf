@@ -2,5 +2,5 @@ pySPARSE v0.0.1
 
 meteo, radiation and other ancillary data needed to run
 
-.csv format/varnames : day,hour,min,doy,rg,ta,rh,ua,tsobs,vza,leobs,lai,glai,zf,rstmin,albedo,albv,xG,xx,xx1,rnobs,gobs,hobs,ratmobs,hpa
+.csv format/varnames : day,hour,min,doy,rg,ta,rh,ua,za,tsobs,vza,leobs,lai,glai,zf,rstmin,albedo,albv,xG,xx,xx1,rnobs,gobs,hobs,ratmobs,hpa
 
