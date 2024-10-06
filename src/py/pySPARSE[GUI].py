@@ -155,7 +155,7 @@ def _tmseries():
             Ta                                  = np.array(meteoNrad['ta']) + 273.15                            # ta loaded in [C]
             rh                                  = np.array(meteoNrad['rh'])
             ua                                  = np.array(meteoNrad['ua'])
-            zf                                  = np.array(meteoNrad['za'])
+            za                                  = np.array(meteoNrad['za'])
             #lai                                 = 1.5; glai = 1.5  
             lai                                 = np.array(meteoNrad['lai']); glai = np.array(meteoNrad['glai'])# temporally varying surface leaf areas                                               # np.array(biophysical['lai'])
             zf                                  = np.array(meteoNrad['zf'])                                     # temporally varying vegetation height
