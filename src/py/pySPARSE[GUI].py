@@ -6,7 +6,7 @@ GUI for running pySPARSE - py Soil Plant Atmosphere Remote Sensing Evapotranspir
 
 import os
 #import ctypes
-import datetime
+from datetime import datetime
 import PySimpleGUI as sg
 import pySPARSE as pySP
 import numpy as np
@@ -293,7 +293,7 @@ def _tmseries():
                 window.refresh()
                 '''
             elif event == 'Save Results':
-                dttime=datetime.datetime.now()
+                dttime=datetime.now()
                 #try:
                 file_nm = values['csv_outloc'] + '/SPARSE_SEB_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv'                
                 np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs']
