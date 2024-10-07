@@ -348,9 +348,9 @@ def _mainwin():
                 #window.close()                window['locktext'].update('... close other nwindow to continue !')
                 _tmseries()
             elif event == 'SPARSE SEB':
-                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')    
+                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')    
             elif event == 'rf':
-                browser.open('https://runningfingers.com/seb.php')        
+                browser.open('https://doi.org/10.5194/hess-19-4653-2015')        
         
         window.Close()
 
