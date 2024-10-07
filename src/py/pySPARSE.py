@@ -29,7 +29,7 @@ def pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf
     zoms 	    = 0.005
     wl 	            = 0.1
 
-    albsmn          = 0.1;  albsmx= 0.5;                                                                # maybe shld not be hardcoded ??
+    albsmn          = 0.05;  albsmx= 0.7;                                                               # maybe shld not be hardcoded ??
 
     # partial pressure [ea], apparent emissivity [emisa], and sky radiance [ratm]
     ea		    = 0.01*rh*6.11*(math.e**(17.269*(Ta - 273.15)/(Ta - 35.85)))

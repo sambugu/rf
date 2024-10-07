@@ -136,6 +136,11 @@ def _tmseries():
         else:
                 Menu                            = sg.Menu
 
+        name_size                               = 32
+        def name(name):
+            dots                                = name_size-len(name)-2
+            return sg.Text(name + ' ' + '•'*dots, size=(name_size,1),justification='r',pad=(0,0))#,font='consolas 10')
+        
         def draw_figure(canvas, figure):
             figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
             figure_canvas_agg.draw()
@@ -155,7 +160,7 @@ def _tmseries():
             Ta                                  = np.array(meteoNrad['ta']) + 273.15                            # ta loaded in [C]
             rh                                  = np.array(meteoNrad['rh'])
             ua                                  = np.array(meteoNrad['ua'])
-            za                                  = np.array(meteoNrad['za'])
+            za                                  = np.array(meteoNrad['za'])                                     # ideally, the measurement height need not change over time. added to reduce the number of files to be loaded by user
             #lai                                 = 1.5; glai = 1.5  
             lai                                 = np.array(meteoNrad['lai']); glai = np.array(meteoNrad['glai'])# temporally varying surface leaf areas                                               # np.array(biophysical['lai'])
             zf                                  = np.array(meteoNrad['zf'])                                     # temporally varying vegetation height
@@ -165,7 +170,8 @@ def _tmseries():
             albe                                = np.array(meteoNrad['albedo'])                                 # np.array(meteoNrad['albe'])
             xg                                  = np.array(meteoNrad['xG'])                                     # G/soil net radiation fraction
             sigmoy                              = 0.5
-            albmode                             = 'UnCapped'
+            #albmode                             = 'UnCapped'
+            albmode                             = values['albmode']
             doy                                 = np.array(meteoNrad['doy'])
 
             xx                                  = {'le':[]}; xx['h'] = []; xx['rn'] = []; xx['g'] = []; xx['lev'] = []; xx['les'] = []; xx['hv'] = []; xx['hs'] = []; xx['tv'] = []; xx['ts'] = []; xx['tsf'] = []; xx['doy'] = []
@@ -197,6 +203,7 @@ def _tmseries():
         layout_l  = [[sg.Text("Input File: ")], [sg.Input(key='csv_loc',expand_x=True), sg.FileBrowse()],
                      [sg.T(key="inputname",justification='c',font='_ 12',expand_x=True),sg.Button('Load Input Data [.csv]')],
                      [sg.Canvas(key='indat_canvas', background_color=sg.theme_button_color()[1], size=(305,200),expand_x=True)],
+                     [name('Capped or Uncapped albedos ?') , sg.Push() , sg.OptionMenu(['Uncapped','Capped'],s=(15,2),key='albmode')],
                      [],
                      [] ]
         layout_r  = [[sg.Canvas(key='rnsp_canvas', background_color=sg.theme_button_color()[1], size=(125,120),expand_x=True),
@@ -211,7 +218,7 @@ def _tmseries():
                       [sg.Col(layout_l, p=0),sg.VSep(color='#666666'),sg.Col(layout_r, p=0)],
                   [sg.Text('Surface Energy Balance | SPARSE',font='_ 7',enable_events=True,expand_x=True,justification='c',key='rf')]]
 
-        window                                  = sg.Window('pySPARSE : soil plant atmosphere remote sensing evapotranspiration',icon=resource_path('rf.ico')).Layout(layout)
+        window                                  = sg.Window('pySPARSE : Soil Plant Atmosphere Remote Sensing Evapotranspiration',icon=resource_path('rf.ico')).Layout(layout)
         progress_bar                            = window['progress_sp']
         run_pySP                                = window['RUN pySPARSE']
         Save_SP                                 = window['Save Results']
@@ -240,11 +247,11 @@ def _tmseries():
                         delete_figure_agg(figure_ta)
                 figrg                           = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")
                 #figrg.patch.set_alpha(0.0)
-                figrg.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],rg[-2000:-1000],'w')
+                figrg.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],rg[-2000:-1000],'w');figrg.suptitle('Rg [W.m$^{-2}$]',color='white',fontsize=9)#;figrg.supylabel('rg')
                 figrh                           = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")
-                figrh.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],rh[-2000:-1000],'w')
+                figrh.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],rh[-2000:-1000],'w');figrh.suptitle('RH [%]',color='white',fontsize=9)#;figrh.supylabel('rh')
                 fig                             = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")
-                fig.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],ta[-2000:-1000],'w')
+                fig.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],ta[-2000:-1000],'w');fig.suptitle('Tair [K]',color='white',fontsize=9)#;fig.supylabel('ta')
                 
                 figure_rg                       = draw_figure(window['indat_canvas'].TKCanvas,figrg)
                 figure_rh                       = draw_figure(window['indat_canvas'].TKCanvas,figrh)
@@ -255,6 +262,7 @@ def _tmseries():
                 #window['inputname'].update('xxxxx')
                 ### run pySPARSE
                 run_pySP.update(disabled=True)
+                Save_SP.update(disabled=True)
                 [seboutput]                     = runSPtm(meteoNrad)#,progress_bar)
                 Save_SP.update(disabled=False)
                 
@@ -268,17 +276,17 @@ def _tmseries():
                         delete_figure_agg(figure_rnsp)
                         
                 figle                           = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
-                figle.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['le'][-2000:-1000],'w')
+                figle.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['le'][-2000:-1000],'w');figle.supylabel('$\lambda$E',fontsize=9)
                 figh                            = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
-                figh.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['h'][-2000:-1000],'w')
+                figh.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['h'][-2000:-1000],'w');figh.supylabel('H',fontsize=9)
                 figg                            = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
-                figg.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['g'][-2000:-1000],'w')
+                figg.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['g'][-2000:-1000],'w');figg.supylabel('G',fontsize=9)
                 figrn                           = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
-                figrn.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['rn'][-2000:-1000],'w')
+                figrn.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['rn'][-2000:-1000],'w');figrn.supylabel('Rn',fontsize=9)
                 figrnsp                         = matplotlib.figure.Figure(figsize=(1.8,1.8),dpi=100, facecolor="#677787")
-                figrnsp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',np.array(meteoNrad['rnobs'])[-2000:-1000],seboutput['rn'][-2000:-1000],'w.')
+                figrnsp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',np.array(meteoNrad['rnobs'])[-2000:-1000],seboutput['rn'][-2000:-1000],'w.');figrnsp.suptitle('Est. vs Obs. Rn [W.m$^{-2}$]',color='white',fontsize=8)#;figrn.supylabel('rn')
                 figlesp                         = matplotlib.figure.Figure(figsize=(1.8,1.8),dpi=100, facecolor="#677787")
-                figlesp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',np.array(meteoNrad['leobs'])[-2000:-1000],seboutput['le'][-2000:-1000],'w.')
+                figlesp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',np.array(meteoNrad['leobs'])[-2000:-1000],seboutput['le'][-2000:-1000],'w.');figlesp.suptitle('Est. vs Obs. $\lambda$E [W.m$^{-2}$]',color='white',fontsize=8)#;figrn.supylabel('rn')
 
                 figure_le                       = draw_figure(window['outdat_canvas'].TKCanvas,figle)
                 figure_h                        = draw_figure(window['outdat_canvas'].TKCanvas,figh)

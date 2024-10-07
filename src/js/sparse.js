@@ -41,7 +41,7 @@ function runSP() {
 }
 
 /* SPARSE evapotranspiration model/algorithm - Boulet et al. (2015) - [https://gitlab.cesbio.omp.eu/bouletg/sparse : matlab scripts]
-Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration : https://doi.org/10.5194/hess-19-4653-2015
+Soil-Plant-Atmosphere Remote Sensing of Evapotranspitation : https://doi.org/10.5194/hess-19-4653-2015
 	A surface energy balance method for the estimation and partitioning
 	of turbulent fluxes (latent and sensible energy) at the 
 	near-land surface
@@ -66,7 +66,7 @@ const xn 	= 2.5;
 const zoms 	= 0.005;
 const wl 	= 0.1;
 
-const albsmn= 0.1;const albsmx= 0.5; //maybe shld not be hardcoded ??
+const albsmn= 0.05;const albsmx= 0.7; //maybe shld not be hardcoded ??
 
 // partial pressure [ea], apparent emissivity [emisa], and sky radiance [ratm]
 let ea		= 0.01*rh*6.11*(Math.E**(17.269*(Ta-273.15)/(Ta-35.85)));
@@ -300,4 +300,13 @@ function SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3){
 	return [X1,X2,X3];
 }
 
-//--uΓu--
+/*
+// Standard Normal variate using Box-Muller transform.
+function randn_bm() {
+    var u = 0, v = 0;
+    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    while(v === 0) v = Math.random();
+    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+}
+*/
+//--uÎ“u--

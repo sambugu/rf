@@ -30,7 +30,7 @@ SPARSE        <- function(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv
   zoms 	      <- 0.005
   wl 	        <- 0.1
   
-  albsmn      <- 0.1;  albsmx <- 0.5
+  albsmn      <- 0.05;  albsmx <- 0.7
   
   # partial pressure [ea], apparent emissivity [emisa], and sky radiance [ratm]
   ea		      <- 0.01*rh*6.11*(exp(17.269*(Ta - 273.15)/(Ta - 35.85)))
