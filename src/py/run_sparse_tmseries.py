@@ -38,24 +38,25 @@ albmode         = 'UnCapped'
 '''
 
 import pandas as pd
-meteoNrad       = pd.read_csv('sparse_data/meteoBS_hdr.csv')                # meteoNrad.head()
+meteoNrad       = pd.read_csv('sparse_data/meteoBS_hdr_enuse.csv')                  # meteoNrad.head()
 #biophysical     = pd.read_csv('sparse_data/meteoBS_hdr.csv')
 
 
-Tsurf           = np.array(meteoNrad['tsobs']) + 273.15                     # tsobs loaded in [C]
-vza             = 0                                                         # np.array(meteoNrad['vza'])
+Tsurf           = np.array(meteoNrad['tsobs']) + 273.15                             # tsobs loaded in [C]
+vza             = 0                                                                 # np.array(meteoNrad['vza'])
 rg              = np.array(meteoNrad['rg'])
-Ta              = np.array(meteoNrad['ta']) + 273.15                        # ta loaded in [C]
+Ta              = np.array(meteoNrad['ta']) + 273.15                                # ta loaded in [C]
 rh              = np.array(meteoNrad['rh'])
 ua              = np.array(meteoNrad['ua'])
-za              = 2.32
-lai             = 1.5; glai = 1.5                                           # np.array(biophysical['lai'])
-zf              = 1                                                         # np.array(biophysical['zf'])
-rstmin          = 100
-albv            = 0.18
+#za              = 2.32
+za              = np.array(meteoNrad['za'])
+lai             = np.array(meteoNrad['lai']); glai = np.array(meteoNrad['glai'])    # temporally varying surface leaf areas                                               # np.array(biophysical['lai'])
+zf              = np.array(meteoNrad['zf'])                                         # temporally varying vegetation height
+rstmin          = np.array(meteoNrad['rstmin'])
+albv            = np.array(meteoNrad['albv'])
 emisv           = 0.98; emiss = 0.96; emissf = 0.97
-albe            = 0.3                                                       # np.array(meteoNrad['albe'])
-xg              = 0.315
+albe            = np.array(meteoNrad['albedo'])                                     # np.array(meteoNrad['albe'])
+xg              = np.array(meteoNrad['xG'])
 sigmoy          = 0.5
 albmode         = 'UnCapped'
 doy             = np.array(meteoNrad['doy'])
@@ -64,7 +65,7 @@ xx              = {'le':[]}; xx['h'] = []; xx['rn'] = []; xx['g'] = []; xx['lev'
 #le              = []; h = []; rn =[]; g = []; lev = []; les = []; hv = []; hs = []; tv = []; ts = []; tsf = []
 
 for i in range(len(Tsurf)):
-    [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza,rg[i],Ta[i],rh[i],ua[i],za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
+    [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza,rg[i],Ta[i],rh[i],ua[i],za[i],lai[i],glai[i],zf[i],rstmin[i],albv[i],emisv,emiss,emissf,albe[i],xg[i],sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
 
     '''
     le[len(le):] = [LE]; h[len(h):] = [H]; rn[len(rn):] =[Rn]; g[len(g):] = [G];
@@ -79,9 +80,9 @@ for i in range(len(Tsurf)):
 output          = xx
 
 ### plot #
-plt.plot(xx['doy'], xx['le'], 'blue')
+plt.plot(xx['doy'], xx['le'], 'blue');plt.ylabel('$\lambda$E [W.m$^{-2}$]')
 plt.show()
 
-plt.plot(np.array(meteoNrad['rnobs']),xx['rn'],'b.',[-200,800],[-200,800],'k-')
+plt.plot(np.array(meteoNrad['rnobs']),xx['rn'],'b.',[-200,800],[-200,800],'k-');plt.title('Est. vs Obs. Rn [W.m$^{-2}$]')
 plt.show()
 #--uΓu--
