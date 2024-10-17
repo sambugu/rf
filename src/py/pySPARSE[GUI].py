@@ -109,7 +109,7 @@ def _onetm():
                       [sg.Col(layout_l, p=0), sg.Col(layout_r, p=0)],
                   [sg.Text('Surface Energy Balance | SPARSE',font='_ 8',enable_events=True,expand_x=True,justification='c',key='rf')]]
         
-        window                                  = sg.Window('pySPARSE : soil plant atmosphere remote sensing evapotranspiration',icon=resource_path('rf.ico')).Layout(layout)
+        window                                  = sg.Window('pySPARSE : Soil Plant Atmosphere Remote Sensing Evapotranspiration',icon=resource_path('rf.ico')).Layout(layout)
         #window                                  = sg.Window('SPARSE : soil plant atmosphere remote sensing evapotranspiration',layout,use_custom_titlebar=use_custom_titlebar)
 
         while True:                             # Event Loop
@@ -348,7 +348,7 @@ def _mainwin():
                 #window.close()                window['locktext'].update('... close other nwindow to continue !')
                 _tmseries()
             elif event == 'SPARSE SEB':
-                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')    
+                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\nContact : gilles.boulet@ird.fr \n\n --- ufu v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')    
             elif event == 'rf':
                 browser.open('https://doi.org/10.5194/hess-19-4653-2015')        
         
