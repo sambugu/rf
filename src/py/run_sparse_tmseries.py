@@ -58,14 +58,17 @@ emisv           = 0.98; emiss = 0.96; emissf = 0.97
 albe            = np.array(meteoNrad['albedo'])                                     # np.array(meteoNrad['albe'])
 xg              = np.array(meteoNrad['xG'])
 sigmoy          = 0.5
-albmode         = 'UnCapped'
 doy             = np.array(meteoNrad['doy'])
+albmode         = 'UnCapped'                                                        # either 'Capped' or 'UnCapped'
+rtrmode         = 'Retrieval'                                                       # either 'Retrieval' or 'Prescribed'
+betav           = 0.1                                                               # [0 to 1] vegetation efficiency
+betas           = 0.3                                                               # [0 to 1] soil evaporation efficiency
 
 xx              = {'le':[]}; xx['h'] = []; xx['rn'] = []; xx['g'] = []; xx['lev'] = []; xx['les'] = []; xx['hv'] = []; xx['hs'] = []; xx['tv'] = []; xx['ts'] = []; xx['tsf'] = []; xx['doy'] = []
 #le              = []; h = []; rn =[]; g = []; lev = []; les = []; hv = []; hs = []; tv = []; ts = []; tsf = []
 
 for i in range(len(Tsurf)):
-    [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza,rg[i],Ta[i],rh[i],ua[i],za[i],lai[i],glai[i],zf[i],rstmin[i],albv[i],emisv,emiss,emissf,albe[i],xg[i],sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
+    [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza,rg[i],Ta[i],rh[i],ua[i],za[i],lai[i],glai[i],zf[i],rstmin[i],albv[i],emisv,emiss,emissf,albe[i],xg[i],sigmoy,albmode,betav,betas,rtrmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
 
     '''
     le[len(le):] = [LE]; h[len(h):] = [H]; rn[len(rn):] =[Rn]; g[len(g):] = [G];

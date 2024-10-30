@@ -10,6 +10,7 @@ Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration : https://doi.org/10.
         [tested on Python v3.11.2]
 	
 -- ufu -- translated to py from 170823
+       -- v0.1.0 - added prescribed mode 301024
 '''
 
 # function [tsurf,tvs,tvh,tgs,tgh,t0,rns,rnv,g,hs,hv,h,les,lev,le,betavs,rtmdat] = 
@@ -17,7 +18,7 @@ Soil-Plant-Atmosphere Remote Sensing of Evapotranspiration : https://doi.org/10.
 
 import math
 
-def pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode):
+def pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode,betav,betas,rtrmode):
 
     # constants
 
@@ -30,6 +31,14 @@ def pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf
     wl 	            = 0.1
 
     albsmn          = 0.05;  albsmx= 0.7;                                                               # maybe shld not be hardcoded ??
+
+    if rtrmode      == 'Retrieval':
+        betav       = 1
+        betas       = 1
+#    elif rtrmode    != 'Prescribed':
+#        betav       = betav
+#        betas       = betas
+            
 
     # partial pressure [ea], apparent emissivity [emisa], and sky radiance [ratm]
     ea		    = 0.01*rh*6.11*(math.e**(17.269*(Ta - 273.15)/(Ta - 35.85)))
@@ -105,83 +114,109 @@ def pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf
         ga 	    = 1/ra
 	# aggregated conductances for series/layer approach
         gav 	    = 1/rav
-        gvv 	    = 1/(rstmin*fea*frg/glai + rav)
+        gvv 	    = betav/(rstmin*fea*frg/glai + rav)
         gas 	    = 1/ras
-        gss 	    = 1/ras
+        gss 	    = betas/ras
         g3a 	    = ga + gas + gav
         g3 	    = ga + gss + gvv
 
-        # solving the SEB [EB coefficients, coefficient matrix (LHS), and the RHS of the augmented matrix]
-            # LHS
-        A1_1 	    = 1
-        A1_2 	    = -rcp*gas*gas/g3a - arns + rcp*gas
-        A1_3 	    = -rcp*gas*gav/g3a - brns
-        A2_1 	    = -gvv/(gvv+ga)
-        A2_2 	    = -rcp*gav*gas/g3a - arnv
-        A2_3 	    = -rcpgd*gvv*gvv/(gvv+ga) - rcp*gav*gav/g3a + rcpgd*gvv + rcp*gav - brnv
-	# linking observed Tsurf with the source temperatures
-        A3_1 	    = 0
-        A3_2 	    = -aras - arav
-        A3_3 	    = -bras - brav
-	    # RHS
-        B1 	    = crns
-        B2 	    = crnv - rcpg*gvv*ga*da/(gvv+ga)
-        B3 	    = Mrad + cras + crav - ratm
-	# SEB matrix solution [A|B] ; [X]=Inv[A][B]
-        [X1,X2,X3]  = SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3)
-
-	# output
-        X0 	    = (gas*X2 + gav*X3)/g3a
-        d0 	    = (rcpg*ga*da - X1 - rcpgd*gvv*X3)/(rcpg*(gvv + ga))
-        LEs 	    = X1
-        LEv	    = rcpg*gvv*(d0 + delta*X3)
-
-        if LEs < LEsmin:            
+        if rtrmode  == 'Retrieval':
+            ### RETRIEVAL MODE
+            
+            # solving the SEB [EB coefficients, coefficient matrix (LHS), and the RHS of the augmented matrix]
                 # LHS
-            A1_1    = 0
+            A1_1    = 1
             A1_2    = -rcp*gas*gas/g3a - arns + rcp*gas
             A1_3    = -rcp*gas*gav/g3a - brns
-            A2_1    = 1
+            A2_1    = -gvv/(gvv+ga)
             A2_2    = -rcp*gav*gas/g3a - arnv
-            A2_3    = -rcp*gav*gav/g3a + rcp*gav - brnv
+            A2_3    = -rcpgd*gvv*gvv/(gvv+ga) - rcp*gav*gav/g3a + rcpgd*gvv + rcp*gav - brnv
             # linking observed Tsurf with the source temperatures
             A3_1    = 0
             A3_2    = -aras - arav
             A3_3    = -bras - brav
                 # RHS
-            B1 	    = crns - LEsmin
-            B2 	    = crnv
+            B1 	    = crns
+            B2 	    = crnv - rcpg*gvv*ga*da/(gvv+ga)
             B3 	    = Mrad + cras + crav - ratm
-		
             # SEB matrix solution [A|B] ; [X]=Inv[A][B]
-		# X1 = LEv; X2 = Ts-Ta; X3 = Tv-Ta;
-            [X1,X2,X3] 	= SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3)
-		
+            [X1,X2,X3]  = SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3)
+
             # output
-            X0      = (gas*X2 + gav*X3)/g3a
-            d0 	    = da - (LEsmin + X1)/(rcpg*ga)
-            LEv     = X1;   LEs = LEsmin
+            X0 	    = (gas*X2 + gav*X3)/g3a
+            d0 	    = (rcpg*ga*da - X1 - rcpgd*gvv*X3)/(rcpg*(gvv + ga))
+            LEs     = X1
+            LEv	    = rcpg*gvv*(d0 + delta*X3)
 
-            if LEv < LEvmin:
+            if LEs < LEsmin:            
                     # LHS
-                A1_1 	= -rcp*gas*gas/g3a - arns + rcp*gas
-                A1_2 	= -rcp*gas*gav/g3a - brns
-                A2_1 	= -rcp*gav*gas/g3a - arnv
-                A2_2 	= -rcp*gav*gav/g3a + rcp*gav - brnv
-		    # RHS
-                B1 	= crns - LEsmin
-                B2 	= crnv
-			
-		# SEB matrix solution [A|B] ; [X]=Inv[A][B]
-                    # X2 = Ts-Ta; X3 = Tv-Ta;
-                detA 	= A1_1*A2_2 - A1_2*A2_1
-                X2 	= (1/detA)*(A2_2*B1 - A1_2*B2)
-                X3 	= (1/detA)*(-A2_1*B1 + A1_1*B2)
-		# output
-                X0 	= (gas*X2 + gav*X3)/g3a
-                d0 	= (ga*da - gss*delta*X2 - gvv*delta*X3)/g3
-                LEv 	= LEvmin; LEs = LEsmin
+                A1_1    = 0
+                A1_2    = -rcp*gas*gas/g3a - arns + rcp*gas
+                A1_3    = -rcp*gas*gav/g3a - brns
+                A2_1    = 1
+                A2_2    = -rcp*gav*gas/g3a - arnv
+                A2_3    = -rcp*gav*gav/g3a + rcp*gav - brnv
+                # linking observed Tsurf with the source temperatures
+                A3_1    = 0
+                A3_2    = -aras - arav
+                A3_3    = -bras - brav
+                    # RHS
+                B1      = crns - LEsmin
+                B2      = crnv
+                B3      = Mrad + cras + crav - ratm
+                    
+                # SEB matrix solution [A|B] ; [X]=Inv[A][B]
+                    # X1 = LEv; X2 = Ts-Ta; X3 = Tv-Ta;
+                [X1,X2,X3]  = SEBsoln(A1_1,A1_2,A1_3,A2_1,A2_2,A2_3,A3_1,A3_2,A3_3,B1,B2,B3)
+                    
+                # output
+                X0      = (gas*X2 + gav*X3)/g3a
+                d0 	= da - (LEsmin + X1)/(rcpg*ga)
+                LEv     = X1;   LEs = LEsmin
 
+                if LEv < LEvmin:
+                        # LHS
+                    A1_1 	= -rcp*gas*gas/g3a - arns + rcp*gas
+                    A1_2 	= -rcp*gas*gav/g3a - brns
+                    A2_1 	= -rcp*gav*gas/g3a - arnv
+                    A2_2 	= -rcp*gav*gav/g3a + rcp*gav - brnv
+                        # RHS
+                    B1 	        = crns - LEsmin
+                    B2 	        = crnv
+                            
+                    # SEB matrix solution [A|B] ; [X]=Inv[A][B]
+                        # X2 = Ts-Ta; X3 = Tv-Ta;
+                    detA 	= A1_1*A2_2 - A1_2*A2_1
+                    X2 	        = (1/detA)*(A2_2*B1 - A1_2*B2)
+                    X3 	        = (1/detA)*(-A2_1*B1 + A1_1*B2)
+                    # output
+                    X0 	        = (gas*X2 + gav*X3)/g3a
+                    d0 	        = (ga*da - gss*delta*X2 - gvv*delta*X3)/g3
+                    LEv 	= LEvmin; LEs = LEsmin
+                    
+        elif rtrmode== 'Prescribed':
+            ### PRESCRIBED MODE
+
+                # LHS
+            A1_1    = -arns + rcp*gas + rcpgd*gss - rcp*gas*gas/g3a - rcpgd*gss*gss/g3
+            A1_2    = -brns - rcp*gas*gav/g3a - rcpgd*gss*gvv/g3
+            A2_1    = -arnv - rcp*gav*gas/g3a - rcpgd*gvv*gas/g3
+            A2_2    = -brnv + rcp*gav + rcpgd*gvv - rcp*gav*gav/g3a - rcpgd*gvv*gvv/g3
+                # RHS
+            B1      = crns - rcpg*gss*ga*da/g3
+            B2      = crnv - rcpg*gvv*ga*da/g3
+
+            # SEB matrix solution [A|B] ; [X]=Inv[A][B]
+                # X2 = Ts-Ta; X3 = Tv-Ta;
+            detA    = A1_1*A2_2 - A1_2*A2_1
+            X2      = (1/detA)*(A2_2*B1 - A1_2*B2)
+            X3      = (1/detA)*(-A2_1*B1 + A1_1*B2)
+            # output
+            X0 	    = (gas*X2 + gav*X3)/g3a
+            d0 	    = (ga*da - gss*delta*X2 - gvv*delta*X3)/g3            
+            LEv     = rcpg*gvv*(d0 + delta*X3)
+            LEs     = rcpg*gss*(d0 + delta*X2)
+            
 	# convergence checks
         errSEB      = abs(X0 - X0old);	Xold = X0
     if rg < 20:

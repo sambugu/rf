@@ -2,6 +2,7 @@
 GUI for running pySPARSE - py Soil Plant Atmosphere Remote Sensing Evapotranspiration - Boulet et al. (2015)
 
 -- ufu --  from 080923 ...made using pysimplegui [.exe compiled using pyinstaller]
+       -- v0.1.0 - added prescribed mode option[s] 301024
 '''
 
 import os
@@ -60,7 +61,17 @@ def _onetm():
             sigmoy                              = float(values['sigmoy'])
             albmode                             = values['albmode']
             
-            [LE,H,rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode)
+            ###
+            #rtrmode                             = str(values['rtrmode'])
+            rtrmode                             = 'Retrieval' # incase user doesn't select an option for if stmt below. albmode seems to work Ok, though ! interesting !
+            if str(values['rtrmode'])=='Retrieval':
+                    rtrmode                     = 'Retrieval'
+            elif str(values['rtrmode'])=='Prescribed':
+                    rtrmode                     = 'Prescribed'
+            betav                               = float(values['betav']);betas = float(values['betas'])
+            ###
+            
+            [LE,H,rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode,betav,betas,rtrmode)
 
             return [floor(LE),floor(H),floor(rn),floor(G),floor(LEv),floor(LEs),floor(Tv),floor(Ts),floor(Tsf)]
 
@@ -96,8 +107,12 @@ def _onetm():
                   [name('Max. G-to-soil net radiation [-]') , sg.InputText(size=10,expand_x=True, key='xg',default_text='0.315',justification='c')],
                   [name('Leaf projection [-]') , sg.InputText(size=10,expand_x=True, key='sigmoy',default_text='0.5',justification='c')],
                   [name('Capped or Uncapped albedos') , sg.OptionMenu(['Uncapped','Capped'],s=(15,2),key='albmode')],
-                  #[sg.Text("SEB estimates",size=10) , sg.Text(text_color="white", key="Output")],
                   #[name('Capped or Uncapped albedos'),sg.Radio('Uncapped', 1, key='albmode'),sg.Radio('Uncapped', 1, key='albmode')],
+                  [name('Retrieval or Prescribed Mode') , sg.OptionMenu(['Retrieval','Prescribed'],s=(15,2),key='rtrmode')],
+                  #[name('Retrieval or Prescribed Mode'),sg.Radio('Retrieval', 1, key='rtrmode'),sg.Radio('Prescribed', 1, key='rtrmode')],
+                  [sg.Text('betav [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betav',default_text='0.99',justification='c'),
+                   sg.Text('betas [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betas',default_text='0.99',justification='c')],
+                  #[sg.Text("SEB estimates",size=10) , sg.Text(text_color="white", key="Output")],                  
                   [sg.Push() , sg.Button("RUN pySPARSE",s=17,button_color=('white','#008040'))] ]
         layout_r = [
                   [sg.T('Surface Energy Balance (SEB) Estimates',font='_ 14',justification='c',expand_x=True)],
@@ -123,7 +138,7 @@ def _onetm():
                 window['OutputTot'].update(outputTot)                                                           ### window['Output'].update(output)
                 window['OutputPart'].update(outputPart)
             elif event == 'SPARSE SEB':
-                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')
+                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.1.0 090923 ---',title='pySPARSE v0.1.0',background_color='#909090',button_color='#707070')
             elif event == 'rf':
                 browser.open('https://runningfingers.com/seb.php')
 
@@ -172,13 +187,24 @@ def _tmseries():
             sigmoy                              = 0.5
             #albmode                             = 'UnCapped'
             albmode                             = values['albmode']
+            
+            ###
+            #rtrmode                             = str(values['rtrmode'])
+            rtrmode                             = 'Retrieval' # incase user doesn't select an option for if stmt below. albmode seems to work Ok, though ! interesting !
+            if str(values['rtrmode'])=='Retrieval':
+                    rtrmode                     = 'Retrieval'
+            elif str(values['rtrmode'])=='Prescribed':
+                    rtrmode                     = 'Prescribed'
+            betav                               = float(values['betav']);betas = float(values['betas'])
+            ###
+            
             doy                                 = np.array(meteoNrad['doy'])
 
             xx                                  = {'le':[]}; xx['h'] = []; xx['rn'] = []; xx['g'] = []; xx['lev'] = []; xx['les'] = []; xx['hv'] = []; xx['hs'] = []; xx['tv'] = []; xx['ts'] = []; xx['tsf'] = []; xx['doy'] = []
             #le              = []; h = []; rn =[]; g = []; lev = []; les = []; hv = []; hs = []; tv = []; ts = []; tsf = []
             for i in range(len(Tsurf)):
-                [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za[i],lai[i],glai[i],zf[i],rstmin[i],albv[i],emisv,emiss,emissf,albe[i],xg[i],sigmoy,albmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
-
+                [LE,H,Rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za[i],lai[i],glai[i],zf[i],rstmin[i],albv[i],emisv,emiss,emissf,albe[i],xg[i],sigmoy,albmode,betav,betas,rtrmode) ###= _fxn_.pySPARSE(Tsurf[i],vza[i],rg[i],Ta[i],rh[i],ua[i],za,lai[i],glai[i],zf[i],rstmin,albv,emisv,emiss,emissf,albe[i],xg,sigmoy,albmode)
+                
                 '''
                 le[len(le):] = [LE]; h[len(h):] = [H]; rn[len(rn):] =[Rn]; g[len(g):] = [G];
                 lev[len(lev):] = [LEv]; les[len(les):] = [LEs]; hv[len(hv):] = [Hv]; hs[len(hs):] = [Hs];
@@ -204,6 +230,9 @@ def _tmseries():
                      [sg.T(key="inputname",justification='c',font='_ 12',expand_x=True),sg.Button('Load Input Data [.csv]')],
                      [sg.Canvas(key='indat_canvas', background_color=sg.theme_button_color()[1], size=(305,200),expand_x=True)],
                      [name('Capped or Uncapped albedos ?') , sg.Push() , sg.OptionMenu(['Uncapped','Capped'],s=(15,2),key='albmode')],
+                     [name('Retrieval or Prescribed Mode ?') , sg.Push() , sg.OptionMenu(['Retrieval','Prescribed'],s=(15,2),key='rtrmode')],
+                     [sg.Text('betav [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betav',default_text='0.99',justification='c'),
+                      sg.Text('betas [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betas',default_text='0.99',justification='c')],
                      [],
                      [] ]
         layout_r  = [[sg.Canvas(key='rnsp_canvas', background_color=sg.theme_button_color()[1], size=(125,120),expand_x=True),
@@ -245,13 +274,16 @@ def _tmseries():
                         delete_figure_agg(figure_rg)
                         delete_figure_agg(figure_rh)
                         delete_figure_agg(figure_ta)
-                figrg                           = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")
+
+                indSZ                           = len(doy)-1 if len(doy)<1500 else 1500
+        
+                figrg                           = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")                
                 #figrg.patch.set_alpha(0.0)
-                figrg.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],rg[-2000:-1000],'w');figrg.suptitle('Rg [W.m$^{-2}$]',color='white',fontsize=9)#;figrg.supylabel('rg')
+                figrg.add_subplot(111, facecolor= "#677787").plot(doy[0:indSZ],rg[0:indSZ],'w');figrg.suptitle('Rg [W.m$^{-2}$]',color='white',fontsize=9)#;figrg.supylabel('rg')
                 figrh                           = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")
-                figrh.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],rh[-2000:-1000],'w');figrh.suptitle('RH [%]',color='white',fontsize=9)#;figrh.supylabel('rh')
+                figrh.add_subplot(111, facecolor= "#677787").plot(doy[0:indSZ],rh[0:indSZ],'w');figrh.suptitle('RH [%]',color='white',fontsize=9)#;figrh.supylabel('rh')
                 fig                             = matplotlib.figure.Figure(figsize=(4,0.8),dpi=100, facecolor="#677787")
-                fig.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],ta[-2000:-1000],'w');fig.suptitle('Tair [K]',color='white',fontsize=9)#;fig.supylabel('ta')
+                fig.add_subplot(111, facecolor= "#677787").plot(doy[0:indSZ],ta[0:indSZ],'w');fig.suptitle('Tair [K]',color='white',fontsize=9)#;fig.supylabel('ta')
                 
                 figure_rg                       = draw_figure(window['indat_canvas'].TKCanvas,figrg)
                 figure_rh                       = draw_figure(window['indat_canvas'].TKCanvas,figrh)
@@ -276,17 +308,23 @@ def _tmseries():
                         delete_figure_agg(figure_rnsp)
                         
                 figle                           = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
-                figle.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['le'][-2000:-1000],'w');figle.supylabel('$\lambda$E',fontsize=9)
+                figle.add_subplot(111, facecolor="#677787").plot(doy[0:indSZ],seboutput['le'][0:indSZ],'w');figle.supylabel('$\lambda$E',fontsize=9)
                 figh                            = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
-                figh.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['h'][-2000:-1000],'w');figh.supylabel('H',fontsize=9)
+                figh.add_subplot(111, facecolor="#677787").plot(doy[0:indSZ],seboutput['h'][0:indSZ],'w');figh.supylabel('H',fontsize=9)
                 figg                            = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
-                figg.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['g'][-2000:-1000],'w');figg.supylabel('G',fontsize=9)
+                figg.add_subplot(111, facecolor="#677787").plot(doy[0:indSZ],seboutput['g'][0:indSZ],'w');figg.supylabel('G',fontsize=9)
                 figrn                           = matplotlib.figure.Figure(figsize=(4,0.55),dpi=100, facecolor="#677787")
-                figrn.add_subplot(111, facecolor="#677787").plot(doy[-2000:-1000],seboutput['rn'][-2000:-1000],'w');figrn.supylabel('Rn',fontsize=9)
+                figrn.add_subplot(111, facecolor="#677787").plot(doy[0:indSZ],seboutput['rn'][0:indSZ],'w');figrn.supylabel('Rn',fontsize=9)
+
+                obs                             = np.array(meteoNrad['rnobs'])[0:indSZ]; obs[obs<-200] = np.nan;obs[obs>800] = np.nan;
+                est                             = np.array(seboutput['rn'][0:indSZ]); est[est<-200] = np.nan; est[est>800] = np.nan;                        
                 figrnsp                         = matplotlib.figure.Figure(figsize=(1.8,1.8),dpi=100, facecolor="#677787")
-                figrnsp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',np.array(meteoNrad['rnobs'])[-2000:-1000],seboutput['rn'][-2000:-1000],'w.');figrnsp.suptitle('Est. vs Obs. Rn [W.m$^{-2}$]',color='white',fontsize=8)#;figrn.supylabel('rn')
+                figrnsp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',np.array(meteoNrad['rnobs'])[0:indSZ],seboutput['rn'][0:indSZ],'w.');figrnsp.suptitle('Est. vs Obs. Rn [W.m$^{-2}$]',color='white',fontsize=8)#;figrn.supylabel('rn')
+
+                obs                             = np.array(meteoNrad['leobs'])[0:indSZ]; obs[obs<-200] = np.nan;obs[obs>800] = np.nan;
+                est                             = np.array(seboutput['le'][0:indSZ]); est[est<-200] = np.nan; est[est>800] = np.nan;  
                 figlesp                         = matplotlib.figure.Figure(figsize=(1.8,1.8),dpi=100, facecolor="#677787")
-                figlesp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',np.array(meteoNrad['leobs'])[-2000:-1000],seboutput['le'][-2000:-1000],'w.');figlesp.suptitle('Est. vs Obs. $\lambda$E [W.m$^{-2}$]',color='white',fontsize=8)#;figrn.supylabel('rn')
+                figlesp.add_subplot(111, facecolor="#677787").plot([-200,800],[-200,800],'k-',obs,est,'w.');figlesp.suptitle('Est. vs Obs. $\lambda$E [W.m$^{-2}$]',color='white',fontsize=8)#;figrn.supylabel('rn')
 
                 figure_le                       = draw_figure(window['outdat_canvas'].TKCanvas,figle)
                 figure_h                        = draw_figure(window['outdat_canvas'].TKCanvas,figh)
@@ -303,16 +341,23 @@ def _tmseries():
             elif event == 'Save Results':
                 dttime=datetime.now()
                 #try:
-                file_nm = values['csv_outloc'] + '/SPARSE_SEB_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv'                
-                np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs']
-                                                            ,seboutput['rn'],seboutput['le'],seboutput['lev'],seboutput['les'],seboutput['h'],seboutput['hv'],seboutput['hs'],seboutput['g']]))
-                           ,delimiter=",",header="doy,rnobs,leobs,hobs,gobs,rnest_SPARSE,leest_SPARSE,levest_SPARSE,lesest_SPARSE,hest_SPARSE,hvest_SPARSE,hsest_SPARSE,gest_SPARSE",comments="")
+                if str(values['rtrmode'])=='Prescribed':
+                        file_nm = values['csv_outloc'] + '/SPARSE_SEB_PrescribedMODE_betas' + str(values['betas']) + '_betav' + str(values['betav']) + '_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv'                
+                        np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs']
+                                                                    ,seboutput['rn'],seboutput['le'],seboutput['lev'],seboutput['les'],seboutput['h'],seboutput['hv'],seboutput['hs'],seboutput['g']]))
+                                   ,delimiter=",",header="doy,rnobs,leobs,hobs,gobs,rnest_SPARSE,leest_SPARSE,levest_SPARSE,lesest_SPARSE,hest_SPARSE,hvest_SPARSE,hsest_SPARSE,gest_SPARSE",comments="")
+                else:
+                        file_nm = values['csv_outloc'] + '/SPARSE_SEB_RetrievalMODE_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv'                
+                        np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs']
+                                                                    ,seboutput['rn'],seboutput['le'],seboutput['lev'],seboutput['les'],seboutput['h'],seboutput['hv'],seboutput['hs'],seboutput['g']]))
+                                   ,delimiter=",",header="doy,rnobs,leobs,hobs,gobs,rnest_SPARSE,leest_SPARSE,levest_SPARSE,lesest_SPARSE,hest_SPARSE,hvest_SPARSE,hsest_SPARSE,gest_SPARSE",comments="")
+
                 #except:
                 #        ctypes.windll.user32.MessageBoxW(0, "Please select a valid saving directory !", "Saving ERROR", 1)
                         
         
             elif event == 'SPARSE SEB':
-                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')    
+                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.1.0 090923 ---',title='pySPARSE v0.1.0',background_color='#909090',button_color='#707070')    
             elif event == 'rf':
                 browser.open('https://runningfingers.com/seb.php')    
                 
@@ -334,7 +379,7 @@ def _mainwin():
         layout   = [[Menu([['File', ['Input Mode',['Key in Model Inputs','Use Timeseries Dataset'],'Exit']],['About',['SPARSE SEB', ]]],k='-CUST MENUBAR-',p=0)],
                   [sg.Col(layout_l, p=0),sg.VSep(color='#666666'),sg.Col(layout_r, p=0)],
                   [sg.Text('Surface Energy Balance | SPARSE', font='_ 7',enable_events=True,expand_x=True,justification='c',key='rf')]]
-        window                                  = sg.Window('pySPARSE v0.0.1',icon=resource_path('rf.ico')).Layout(layout)
+        window                                  = sg.Window('pySPARSE v0.1.0',icon=resource_path('rf.ico')).Layout(layout)
         #window                                  = sg.Window('SPARSE : soil plant atmosphere remote sensing evapotranspiration',layout,use_custom_titlebar=use_custom_titlebar)
 
         while True:                             # Event Loop
@@ -348,7 +393,7 @@ def _mainwin():
                 #window.close()                window['locktext'].update('... close other nwindow to continue !')
                 _tmseries()
             elif event == 'SPARSE SEB':
-                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\nContact : gilles.boulet@ird.fr \n\n --- ufu v0.0.1 090923 ---',title='pySPARSE v0.0.1',background_color='#909090',button_color='#707070')    
+                sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\nContact : gilles.boulet@ird.fr \n\n --- ufu v0.1.0 090923 ---',title='pySPARSE v0.1.0',background_color='#909090',button_color='#707070')    
             elif event == 'rf':
                 browser.open('https://doi.org/10.5194/hess-19-4653-2015')        
         
