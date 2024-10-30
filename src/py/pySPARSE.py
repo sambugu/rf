@@ -35,7 +35,7 @@ def pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf
     if rtrmode      == 'Retrieval':
         betav       = 1
         betas       = 1
-#    elif rtrmode    != 'Prescribed':
+#    elif rtrmode    == 'Prescribed':
 #        betav       = betav
 #        betas       = betas
             
