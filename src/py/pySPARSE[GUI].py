@@ -64,9 +64,9 @@ def _onetm():
             ###
             #rtrmode                             = str(values['rtrmode'])
             rtrmode                             = 'Retrieval' # incase user doesn't select an option for if stmt below. albmode seems to work Ok, though ! interesting !
-            if str(values['rtrmode'])=='Retrieval':
+            if values['rtrmode']:#str(values['rtrmode'])=='Retrieval':
                     rtrmode                     = 'Retrieval'
-            elif str(values['rtrmode'])=='Prescribed':
+            elif values['presmode']:#str(values['rtrmode'])=='Prescribed':
                     rtrmode                     = 'Prescribed'
             betav                               = float(values['betav']);betas = float(values['betas'])
             ###
@@ -108,8 +108,8 @@ def _onetm():
                   [name('Leaf projection [-]') , sg.InputText(size=10,expand_x=True, key='sigmoy',default_text='0.5',justification='c')],
                   [name('Capped or Uncapped albedos') , sg.OptionMenu(['Uncapped','Capped'],s=(15,2),key='albmode')],
                   #[name('Capped or Uncapped albedos'),sg.Radio('Uncapped', 1, key='albmode'),sg.Radio('Uncapped', 1, key='albmode')],
-                  [name('Retrieval or Prescribed Mode') , sg.OptionMenu(['Retrieval','Prescribed'],s=(15,2),key='rtrmode')],
-                  #[name('Retrieval or Prescribed Mode'),sg.Radio('Retrieval', 1, key='rtrmode'),sg.Radio('Prescribed', 1, key='rtrmode')],
+                  #[name('Retrieval or Prescribed Mode') , sg.OptionMenu(['Retrieval','Prescribed'],s=(15,2),key='rtrmode')],
+                  [sg.Push() , sg.Radio('Retrieval Mode', 1, key='rtrmode',font='consolas 10',default=True),sg.Radio('Prescribed Mode (betav,betas)', 1, key='presmode',font='consolas 10')],
                   [sg.Text('betav [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betav',default_text='0.99',justification='c'),
                    sg.Text('betas [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betas',default_text='0.99',justification='c')],
                   #[sg.Text("SEB estimates",size=10) , sg.Text(text_color="white", key="Output")],                  
@@ -191,9 +191,9 @@ def _tmseries():
             ###
             #rtrmode                             = str(values['rtrmode'])
             rtrmode                             = 'Retrieval' # incase user doesn't select an option for if stmt below. albmode seems to work Ok, though ! interesting !
-            if str(values['rtrmode'])=='Retrieval':
+            if values['rtrmode']:#str(values['rtrmode'])=='Retrieval':
                     rtrmode                     = 'Retrieval'
-            elif str(values['rtrmode'])=='Prescribed':
+            elif values['presmode']:#str(values['rtrmode'])=='Prescribed':
                     rtrmode                     = 'Prescribed'
             betav                               = float(values['betav']);betas = float(values['betas'])
             ###
@@ -230,9 +230,10 @@ def _tmseries():
                      [sg.T(key="inputname",justification='c',font='_ 12',expand_x=True),sg.Button('Load Input Data [.csv]')],
                      [sg.Canvas(key='indat_canvas', background_color=sg.theme_button_color()[1], size=(305,200),expand_x=True)],
                      [name('Capped or Uncapped albedos ?') , sg.Push() , sg.OptionMenu(['Uncapped','Capped'],s=(15,2),key='albmode')],
-                     [name('Retrieval or Prescribed Mode ?') , sg.Push() , sg.OptionMenu(['Retrieval','Prescribed'],s=(15,2),key='rtrmode')],
-                     [sg.Text('betav [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betav',default_text='0.99',justification='c'),
-                      sg.Text('betas [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betas',default_text='0.99',justification='c')],
+                     #[name('Retrieval or Prescribed Mode ?') , sg.Push() , sg.OptionMenu(['Retrieval','Prescribed'],s=(15,2),key='rtrmode')],
+                     [sg.Push() , sg.Radio('Retrieval Mode', 1, key='rtrmode',font='consolas 10',default=True),sg.Radio('Prescribed Mode', 1, key='presmode',font='consolas 10')],
+                     [sg.Push(),sg.Text('betav [-]',font='consolas 10'),sg.InputText(size=10,expand_x=False, key='betav',default_text='0.99',justification='r'),
+                      sg.Text('betas [-]',font='consolas 10'),sg.InputText(size=10,expand_x=False, key='betas',default_text='0.99',justification='r')],
                      [],
                      [] ]
         layout_r  = [[sg.Canvas(key='rnsp_canvas', background_color=sg.theme_button_color()[1], size=(125,120),expand_x=True),
@@ -341,7 +342,7 @@ def _tmseries():
             elif event == 'Save Results':
                 dttime=datetime.now()
                 #try:
-                if str(values['rtrmode'])=='Prescribed':
+                if values['presmode']:#str(values['rtrmode'])=='Prescribed':
                         file_nm = values['csv_outloc'] + '/SPARSE_SEB_PrescribedMODE_betas' + str(values['betas']) + '_betav' + str(values['betav']) + '_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv'                
                         np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs']
                                                                     ,seboutput['rn'],seboutput['le'],seboutput['lev'],seboutput['les'],seboutput['h'],seboutput['hv'],seboutput['hs'],seboutput['g']]))

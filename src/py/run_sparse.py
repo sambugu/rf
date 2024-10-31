@@ -25,7 +25,9 @@ albe            = 0.3
 xg              = 0.315
 sigmoy          = 0.5
 albmode         = 'UnCapped'
+rtrmode         = 'Retrieval'
+betav           = 0.99;betas=0.99
 
-[LE,H,rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode)
+[LE,H,rn,G,LEv,LEs,Hv,Hs,Tv,Ts,Tsf] = pySP.pySPARSE(Tsurf,vza,rg,Ta,rh,ua,za,lai,glai,zf,rstmin,albv,emisv,emiss,emissf,albe,xg,sigmoy,albmode,betav,betas,rtrmode)
 
 #--uΓu--
