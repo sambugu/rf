@@ -344,19 +344,23 @@ def _tmseries():
                 #try:
                 if values['presmode']:#str(values['rtrmode'])=='Prescribed':
                         file_nm = values['csv_outloc'] + '/SPARSE_SEB_PrescribedMODE_betas' + str(values['betas']) + '_betav' + str(values['betav']) + '_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv'                
-                        np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs']
-                                                                    ,seboutput['rn'],seboutput['le'],seboutput['lev'],seboutput['les'],seboutput['h'],seboutput['hv'],seboutput['hs'],seboutput['g']]))
-                                   ,delimiter=",",header="doy,rnobs,leobs,hobs,gobs,rnest_SPARSE,leest_SPARSE,levest_SPARSE,lesest_SPARSE,hest_SPARSE,hvest_SPARSE,hsest_SPARSE,gest_SPARSE",comments="")
+                        np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs'],meteoNrad['tsobs'] + 273.15
+                                                                    ,seboutput['rn'],seboutput['le'],seboutput['lev'],seboutput['les'],seboutput['h'],seboutput['hv'],seboutput['hs'],seboutput['g'],seboutput['tv'],seboutput['ts'],seboutput['tsf']]))
+                                   ,delimiter=",",header="doy,rnobs,leobs,hobs,gobs,Tsurfobs,rnest_SPARSE,leest_SPARSE,levest_SPARSE,lesest_SPARSE,hest_SPARSE,hvest_SPARSE,hsest_SPARSE,gest_SPARSE,Tvest_SPARSE,Tsest_SPARSE,Tsurfest_SPARSE",comments="")
+
+                        sg.Popup('Results Saved as « ~_PrescribedMODE_betas' + str(values['betas']) + '_betav' + str(values['betav']) + '_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv »',title='pySPARSE v0.1.0',background_color='#909090',button_color='#707070')            
+
                 else:
                         file_nm = values['csv_outloc'] + '/SPARSE_SEB_RetrievalMODE_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv'                
-                        np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs']
-                                                                    ,seboutput['rn'],seboutput['le'],seboutput['lev'],seboutput['les'],seboutput['h'],seboutput['hv'],seboutput['hs'],seboutput['g']]))
-                                   ,delimiter=",",header="doy,rnobs,leobs,hobs,gobs,rnest_SPARSE,leest_SPARSE,levest_SPARSE,lesest_SPARSE,hest_SPARSE,hvest_SPARSE,hsest_SPARSE,gest_SPARSE",comments="")
+                        np.savetxt(file_nm,np.transpose(np.asarray([meteoNrad['doy'],meteoNrad['rnobs'],meteoNrad['leobs'],meteoNrad['hobs'],meteoNrad['gobs'],meteoNrad['tsobs'] + 273.15
+                                                                    ,seboutput['rn'],seboutput['le'],seboutput['lev'],seboutput['les'],seboutput['h'],seboutput['hv'],seboutput['hs'],seboutput['g'],seboutput['tv'],seboutput['ts'],seboutput['tsf']]))
+                                   ,delimiter=",",header="doy,rnobs,leobs,hobs,gobs,Tsurfobs,rnest_SPARSE,leest_SPARSE,levest_SPARSE,lesest_SPARSE,hest_SPARSE,hvest_SPARSE,hsest_SPARSE,gest_SPARSE,Tvest_SPARSE,Tsest_SPARSE,Tsurfest_SPARSE",comments="")
+
+                        sg.Popup('Results Saved as « ~_RetrievalMODE_' + str(dttime.year*100000000 + dttime.month*1000000 + dttime.day*10000 + dttime.hour*100 + dttime.minute) + '.csv »',title='pySPARSE v0.1.0',background_color='#909090',button_color='#707070')            
 
                 #except:
                 #        ctypes.windll.user32.MessageBoxW(0, "Please select a valid saving directory !", "Saving ERROR", 1)
                         
-        
             elif event == 'SPARSE SEB':
                 sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\n --- ufu v0.1.0 090923 ---',title='pySPARSE v0.1.0',background_color='#909090',button_color='#707070')    
             elif event == 'rf':
@@ -396,7 +400,7 @@ def _mainwin():
             elif event == 'SPARSE SEB':
                 sg.Popup('The pySPARSE model [Soil Plant Atmosphere Remote Sensing Evapotranspiration] \n\nTheory : https://doi.org/10.5194/hess-19-4653-2015 \n\nContact : gilles.boulet@ird.fr \n\n --- ufu v0.1.0 090923 ---',title='pySPARSE v0.1.0',background_color='#909090',button_color='#707070')    
             elif event == 'rf':
-                browser.open('https://doi.org/10.5194/hess-19-4653-2015')        
+                browser.open('https://runningfingers.com/seb.php')        
         
         window.Close()
 
