@@ -109,9 +109,9 @@ def _onetm():
                   [name('Capped or Uncapped albedos') , sg.OptionMenu(['Uncapped','Capped'],s=(15,2),key='albmode')],
                   #[name('Capped or Uncapped albedos'),sg.Radio('Uncapped', 1, key='albmode'),sg.Radio('Uncapped', 1, key='albmode')],
                   #[name('Retrieval or Prescribed Mode') , sg.OptionMenu(['Retrieval','Prescribed'],s=(15,2),key='rtrmode')],
-                  [sg.Push() , sg.Radio('Retrieval Mode', 1, key='rtrmode',font='consolas 10',default=True),sg.Radio('Prescribed Mode (betav,betas)', 1, key='presmode',font='consolas 10')],
-                  [sg.Text('betav [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betav',default_text='0.99',justification='c'),
-                   sg.Text('betas [-]',font='consolas 10'),sg.InputText(size=10,expand_x=True, key='betas',default_text='0.99',justification='c')],
+                  [sg.Push() , sg.Radio('Retrieval Mode', 1, enable_events=True, key='rtrmode',font='consolas 10',default=True),sg.Radio('Prescribed Mode (betav,betas)', 1, enable_events=True, key='presmode',font='consolas 10')],
+                  [sg.Text('betav [-]',key='betav [-]',font='consolas 10',visible=False),sg.InputText(size=10,expand_x=True, key='betav',default_text='0.99',visible=False,justification='c'),
+                   sg.Text('betas [-]',key='betas [-]',font='consolas 10',visible=False),sg.InputText(size=10,expand_x=True, key='betas',default_text='0.99',visible=False,justification='c')],
                   #[sg.Text("SEB estimates",size=10) , sg.Text(text_color="white", key="Output")],                  
                   [sg.Push() , sg.Button("RUN pySPARSE",s=17,button_color=('white','#008040'))] ]
         layout_r = [
@@ -131,6 +131,16 @@ def _onetm():
             event, values                       = window.Read()
             if event in (None, 'Exit'):
                 break
+            elif event == 'presmode':
+                window['betas [-]'].update(visible = True)
+                window['betas'].update(visible = True)
+                window['betav [-]'].update(visible = True)
+                window['betav'].update(visible = True)               
+            elif event == 'rtrmode':
+                window['betas'].update(visible = False)
+                window['betav'].update(visible = False)
+                window['betas [-]'].update(visible = False)
+                window['betav [-]'].update(visible = False)
             elif event == 'RUN pySPARSE':
                 [LE,H,rn,G,LEv,LEs,Tv,Ts,Tsf]   = runSP(values)
                 outputTot                       = f"\n LE: {LE} \n H:  {H} \n Rn: {rn} \n G:  {G}\n"            ### output                          = f"LE: {LE} | H: {H} | Rn: {rn} | G: {G} \n LEv: {LEv} | LEs: {LEs}"# | Tv: {Tv} | Ts: {Ts}"
@@ -231,9 +241,9 @@ def _tmseries():
                      [sg.Canvas(key='indat_canvas', background_color=sg.theme_button_color()[1], size=(305,200),expand_x=True)],
                      [name('Capped or Uncapped albedos ?') , sg.Push() , sg.OptionMenu(['Uncapped','Capped'],s=(15,2),key='albmode')],
                      #[name('Retrieval or Prescribed Mode ?') , sg.Push() , sg.OptionMenu(['Retrieval','Prescribed'],s=(15,2),key='rtrmode')],
-                     [sg.Push() , sg.Radio('Retrieval Mode', 1, key='rtrmode',font='consolas 10',default=True),sg.Radio('Prescribed Mode', 1, key='presmode',font='consolas 10')],
-                     [sg.Push(),sg.Text('betav [-]',font='consolas 10'),sg.InputText(size=10,expand_x=False, key='betav',default_text='0.99',justification='r'),
-                      sg.Text('betas [-]',font='consolas 10'),sg.InputText(size=10,expand_x=False, key='betas',default_text='0.99',justification='r')],
+                     [sg.Push() , sg.Radio('Retrieval Mode', 1, enable_events=True, key='rtrmode',font='consolas 10',default=True),sg.Radio('Prescribed Mode', 1, enable_events=True, key='presmode',font='consolas 10')],
+                     [sg.Push(),sg.Text('betav [-]',key='betav [-]',font='consolas 10',visible=False),sg.InputText(size=10,expand_x=False, key='betav',default_text='0.99',visible=False,justification='r'),
+                      sg.Text('betas [-]',key='betas [-]',font='consolas 10',visible=False),sg.InputText(size=10,expand_x=False, key='betas',default_text='0.99',visible=False,justification='r')],
                      [],
                      [] ]
         layout_r  = [[sg.Canvas(key='rnsp_canvas', background_color=sg.theme_button_color()[1], size=(125,120),expand_x=True),
@@ -260,6 +270,16 @@ def _tmseries():
             elif event in ('inst','Key In Data'):
                 window.close()    
                 _onetm()
+            elif event == 'presmode':
+                window['betas [-]'].update(visible = True)
+                window['betas'].update(visible = True)
+                window['betav [-]'].update(visible = True)
+                window['betav'].update(visible = True)               
+            elif event == 'rtrmode':
+                window['betas'].update(visible = False)
+                window['betav'].update(visible = False)
+                window['betas [-]'].update(visible = False)
+                window['betav [-]'].update(visible = False)
             elif event == 'Load Input Data [.csv]':  
                 #window['inputname'].update(values['csv_loc'])
                     
