@@ -257,7 +257,7 @@ function calcRn(rg,ratm,emiss,emisv,albe,albv,fcov,fcovl,albsmn,albsmx,albmode){
 	if (albmode != 'Capped'){
 		var albs 	= (albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2);
 	} else {
-		var albs 	= Math.max(albsmn,Math.min(albsmn,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)));		
+		var albs 	= Math.max(albsmn,Math.min(albsmx,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)));		
 	}
 	//var albs 	= (albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2);
 	//var albs 	= Math.max(albsmn,Math.min(albsmn,(albe-fcov*albv)/((1-fcov)**2 + fcov*albv*albe - (fcov*albv)**2)));

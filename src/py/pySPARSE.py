@@ -248,7 +248,7 @@ def calcRn(rg,ratm,emiss,emisv,albe,albv,fcov,fcovl,albsmn,albsmx,albmode):
     if albmode      != 'Capped':
         albs        = (albe - fcov*albv)/((1 - fcov)**2 + fcov*albv*albe - (fcov*albv)**2)
     else:
-        albs 	    = max(albsmn,min(albsmn,(albe - fcov*albv)/((1 - fcov)**2 + fcov*albv*albe - (fcov*albv)**2)))		
+        albs 	    = max(albsmn,min(albsmx,(albe - fcov*albv)/((1 - fcov)**2 + fcov*albv*albe - (fcov*albv)**2)))		
 
     # albs 	    = (albe - fcov*albv)/((1 - fcov)**2 + fcov*albv*albe - (fcov*albv)**2)
     # albs 	    = max(albsmn,min(albsmn,(albe - fcov*albv)/((1 - fcov)**2 + fcov*albv*albe - (fcov*albv)**2)))
